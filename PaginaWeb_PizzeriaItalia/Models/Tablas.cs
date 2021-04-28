@@ -7,6 +7,7 @@ namespace PaginaWeb_PizzeriaItalia.Models
 {
     public class Tablas
     {
+        public static List<Pizza> Tb_Pizza = new List<Pizza>();
         public class Tienda
         {
             public int Cod_tienda { get; set; }
@@ -28,10 +29,10 @@ namespace PaginaWeb_PizzeriaItalia.Models
         {
             public int Cod_pizza { get; set; }
             public String Nombre { get; set; }
-            public float Precio { get; set; }
+            public double Precio { get; set; }
             public String Foto { get; set; }
-            public Pizza() { }
-            public Pizza(int _Cod_pizza, String _Nombre, float _Precio, String _Foto)
+            public Pizza(object v) { }
+            public Pizza(int _Cod_pizza, String _Nombre, double _Precio, String _Foto)
             {
                 Cod_pizza = _Cod_pizza;
                 Nombre = _Nombre;
@@ -121,10 +122,10 @@ namespace PaginaWeb_PizzeriaItalia.Models
             public String Direccion { get; set; }
             public DateTime Fecha { get; set; }
             public TimeSpan Hora { get; set; }
-            public float Total { get; set; }
+            public double Total { get; set; }
             public int Estado { get; set; }
             public Pedido() { }
-            public Pedido(int _Cod_pedido, int _Tipo_pedido, int _Cod_tienda, int _Cod_cliente, String _Direccion, DateTime _Fecha, TimeSpan _Hora, float _Total, int _Estado)
+            public Pedido(int _Cod_pedido, int _Tipo_pedido, int _Cod_tienda, int _Cod_cliente, String _Direccion, DateTime _Fecha, TimeSpan _Hora, double _Total, int _Estado)
             {
                 Cod_pedido = _Cod_pedido;
                 Tipo_pedido = _Tipo_pedido;
