@@ -7,7 +7,6 @@ namespace PaginaWeb_PizzeriaItalia.Models
 {
     public class Tablas
     {
-        public static List<Pizza> Tb_Pizza = new List<Pizza>();
         public class Tienda
         {
             public int Cod_tienda { get; set; }
@@ -31,7 +30,7 @@ namespace PaginaWeb_PizzeriaItalia.Models
             public String Nombre { get; set; }
             public double Precio { get; set; }
             public String Foto { get; set; }
-            public Pizza(object v) { }
+            public Pizza() { }
             public Pizza(int _Cod_pizza, String _Nombre, double _Precio, String _Foto)
             {
                 Cod_pizza = _Cod_pizza;

@@ -22,7 +22,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		public IActionResult Index()
 		{
 			Database.Abrir();
-			Tablas.Tb_Pizza.Clear();
+			Datos.Tb_Pizza.Clear();
 			SqlCommand consulta = new SqlCommand("Select * from pizza", Database.conectar);
 			SqlDataReader Leer = consulta.ExecuteReader();
 			while (Leer.Read())
@@ -32,9 +32,9 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
                 {
 					url = "https://www.cuballama.com/envios/images/imagen-no-encontrada.png";
 				}
-				Tablas.Tb_Pizza.Add(new Tablas.Pizza((int)Leer[0], (string)Leer[1], (double)Leer[2], url));
+				Datos.Tb_Pizza.Add(new Tablas.Pizza((int)Leer[0], (string)Leer[1], (double)Leer[2], url));
 			}
-			return View(Tablas.Tb_Pizza);
+			return View(Datos.Tb_Pizza);
 		}
 
 		public IActionResult Privacy()
