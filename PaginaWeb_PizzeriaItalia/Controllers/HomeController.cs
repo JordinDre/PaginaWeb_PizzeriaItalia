@@ -27,6 +27,14 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		{
 			return View();
 		}
+		public IActionResult InicioSesion()
+		{
+			return View();
+		}
+		public IActionResult Registrarse()
+		{
+			return View();
+		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()
