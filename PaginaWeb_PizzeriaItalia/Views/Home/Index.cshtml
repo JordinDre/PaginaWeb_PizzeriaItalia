@@ -46,16 +46,16 @@
         </button>
     </div>
     <br><br>
-    <div class="container" style="margin: 0 auto; display: flex;">
+    <div class="container " style="margin: 0 auto; display: flex;">
         <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
             @foreach (var item in Model)
             {
-                <div class="col-sm-6">
+                <div class="col-sm-6 rounded-0">
                     <div class="p-3">
-                        <button type="button" id="@item.Cod_pizza" class="btn btn-outline-info rounded-bottom">
-                            <h2>@item.Nombre</h2>
-                            <img src=@item.Foto style="max-width:100%;" />
-                            <h2>Precio Q.@item.Precio</h2>
+                        <button type="button" id="@item.Cod_pizza" class="btn btn-outline-dark rounded-bottom">
+                            <h3>@item.Nombre</h3>
+                            <img src=@item.Foto style="max-width:100%; width: 200px; height: 150px" class="rounded-circle"/>
+                            <h3>Precio Q.@item.Precio</h3>
                         </button>
                         <script>
                             $("#" +@item.Cod_pizza).click(function ()
