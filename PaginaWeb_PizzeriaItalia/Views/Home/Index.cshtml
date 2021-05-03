@@ -1,10 +1,9 @@
 ﻿@model List<Tablas.Pizza>
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = TempData["Nombre"];
     Tablas.Pizza Selecionado = new Tablas.Pizza(0, "", 0, "");
     List<Tablas.Pizza> Pedido = new List<Tablas.Pizza>();
-    int Cantidad = 0;
-    int Aux = 0;
+
 }
 
 
