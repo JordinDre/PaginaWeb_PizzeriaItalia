@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using PaginaWeb_PizzeriaItalia.Models;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -12,6 +13,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 {
 	public class HomeController : Controller
 	{
+		public static List<Tablas.Pizza> Compras = new List<Tablas.Pizza>();
 		private readonly ILogger<HomeController> _logger;
 
 		public HomeController(ILogger<HomeController> logger)
@@ -36,7 +38,23 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			}
 			return View(Datos.Tb_Pizza);
 		}
-
+		[HttpPost]
+		public JsonResult Obtener_pizza(int cod_pizza, string nombre, string precio, string foto)
+        {
+			Tablas.Pizza pizza = new Tablas.Pizza();
+			Database.Abrir();
+			Datos.Tb_Pizza.Clear();
+			SqlCommand consulta = new SqlCommand("Select * from pizza where cod_pizza = '"+cod_pizza+"'", Database.conectar);
+			SqlDataReader Leer = consulta.ExecuteReader();
+			while (Leer.Read())
+			{
+				pizza.Cod_pizza = (int) Leer[0];
+				pizza.Nombre = (string) Leer[1];
+				pizza.Precio = (double) Leer[2];
+				pizza.Foto = (string) Leer[3];
+			}
+			return Json(pizza);
+        }
 		public IActionResult Privacy()
 		{
 			return View();
