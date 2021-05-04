@@ -20,8 +20,6 @@
     <script src="https://code.jquery.com/jquery-1.10.0.min.js" integrity="sha256-2+LznWeWgL7AJ1ciaIG5rFP7GKemzzl+K75tRyTByOE=" crossorigin="anonymous"></script>
 </head>
 <body>
-
-    <form method="post">
         <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-indicators ">
                 <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -72,6 +70,8 @@
                                     $('#Txt_imagen').attr("src", "" + data.foto + "");
                                     $('#Txt_cod_pizza').text(data.cod_pizza);
                                     $('#Txt_nombre').text(data.nombre);
+                                    $('#cod_pizza').val(data.cod_pizza);
+                                    $('#cantidad').val(1);
                                     $('#Txt_precio').text(data.precio);
                                     $('#Txt_total').text(data.precio);
                                     $('#pizza').modal('show');
@@ -126,6 +126,7 @@
                                                 $('#Txt_cantidad').on("input", function ()
                                                 {
                                                     var x = parseInt($(this).val());
+                                                    $('cantidad').val = x;
                                                     var y = parseFloat($('#Txt_precio').text());
                                                     var total = x * y;
                                                     $('#Txt_total').text(total);
@@ -145,21 +146,28 @@
                                         </div>
                                         <br />
                                         <div class="row">
-                                            <button type="button" class="btn btn-primary" id="Btn_agregar">Agregar</button>
+                                            <form class="row" method="post">
+                                                <input hidden name="cod_pizza" id="cod_pizza" value=""/>
+                                                <input hidden name="cantidad" id="cantidad" value=""/>  
+                                                <button type="button" class="btn btn-primary" id="Btn" name="Btn">Agregar</button>
+                                                <script>
+                                                    $(function () {
+                                                        $('#Btn').click(function () {
+                                                            var cod_pizza = $('#cod_pizza').val();
+                                                            var cantidad = $('#cantidad').val();
+                                                            $.ajax({
+                                                                url: "@Url.Action("Agregar")",
+                                                                data: { cod_pizza: cod_pizza, cantidad: cantidad },
+                                                                type: "POST",
+                                                                success: function (response) {
+                                                                    $('#pizza').modal('hide');
+                                                                }
+                                                            });
+                                                        })
+                                                    });
+                                                </script>
+                                            </form>
                                             <script>
-                                            $("#Btn_agregar").click(function ()
-                                            {
-                                                var url = "@Url.Action("Agregar_pizza","Home")";
-                                                var x = $('#Txt_cod_pizza').text();
-                                                var y = $('#Txt_cantidad').val();
-                                                var z = $('#Txt_precio').text();
-                                                var data = { cod_pizza: x , cantidad: y , precio: z};
-                                                $.post(url, data).done(function (data)
-                                                {
-                                                    $("#pizza").modal().hide();
-                                                });
-
-                                            })
                                             </script>
                                         </div>
                                         <br />
@@ -171,6 +179,5 @@
                 </div>
             </div>
         </div>
-     </form>
 </body>
 </html>

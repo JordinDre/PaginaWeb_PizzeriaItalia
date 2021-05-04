@@ -41,18 +41,18 @@
                                                 <h4>Compra</h4>
                                             </button>
                                             <script>
-                                            $("#compra").click(function ()
+                                            @*$("#compra").click(function ()
                                             {
                                                 var url = "@Url.Action("Obtener_compra","Home")";
                                                 $.post(url).done(function (data) {
                                                     $('#detalles').modal('show');
                                                 });
 
-                                            })
+                                            })*@
                                             </script>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link text-dark">@TempData["Total"]</a>
+                                            <a class="nav-link text-dark"></a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Cerrar">Cerrar Sesion</a>

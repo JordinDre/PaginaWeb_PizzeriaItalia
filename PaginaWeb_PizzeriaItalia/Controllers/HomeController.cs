@@ -13,7 +13,8 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 {
 	public class HomeController : Controller
 	{
-		public static List<Tablas.Pizza> Compras = new List<Tablas.Pizza>();
+		public static List<Tablas.Detalle_pedido> Compras = new List<Tablas.Detalle_pedido>();
+		public static List<Tablas.Pizza> Pizzas = new List<Tablas.Pizza>();
 		private readonly ILogger<HomeController> _logger;
 
 		public void Quitar_usuario()
@@ -23,13 +24,22 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			TempData["Tipo"] = null;
 			TempData["Total"] = 0;
 			TempData["Compra"] = new List<Tablas.Pizza>();
+			Compras.Clear();
 		}
+		public void Calcular_Total()
+        {
 
+        }
 		public HomeController(ILogger<HomeController> logger)
 		{
 			_logger = logger;
 		}
-
+		public ActionResult Agregar(String cod_pizza, String cantidad)
+        {
+			Tablas.Detalle_pedido detalle_pedido = new Tablas.Detalle_pedido(Compras.Count, 1, Convert.ToInt32(cod_pizza), Convert.ToInt32(cantidad));
+			Compras.Add(detalle_pedido);
+			return Content("Agregado");
+		}
 		public IActionResult Index()
 		{
 			if (TempData["Nombre"] is null)
@@ -39,8 +49,8 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			else
 			{
 				TempData.Keep();
+				Pizzas.Clear();
 				Database.Abrir();
-				Datos.Tb_Pizza.Clear();
 				SqlCommand consulta = new SqlCommand("Select * from pizza", Database.conectar);
 				SqlDataReader Leer = consulta.ExecuteReader();
 				while (Leer.Read())
@@ -50,9 +60,9 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 					{
 						url = "https://www.cuballama.com/envios/images/imagen-no-encontrada.png";
 					}
-					Datos.Tb_Pizza.Add(new Tablas.Pizza((int)Leer[0], (string)Leer[1], (double)Leer[2], url));
+					Pizzas.Add(new Tablas.Pizza((int)Leer[0], (string)Leer[1], (double)Leer[2], url));
 				}
-				return View(Datos.Tb_Pizza);
+				return View(Pizzas);
 			}
 			
 		}
@@ -74,22 +84,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			return Json(pizza);
 		}
 
-		[HttpPost]
-		public JsonResult Agregar_pizza(int cod_pizza, int cantidad, string precio)
-		{
-			List<Tablas.Detalle_pedido> Tb_detalles = TempData["Compras"] as List<Tablas.Detalle_pedido>;
-            if (Tb_detalles == null)
-            {
-				Tb_detalles = new List<Tablas.Detalle_pedido>();
-            }
-			Tablas.Detalle_pedido detalle_pedido = new Tablas.Detalle_pedido(Tb_detalles.Count, 1, cod_pizza, cantidad);
-			Tb_detalles.Add(detalle_pedido);
-			TempData["Compras"] = Tb_detalles;
-			double aux = Convert.ToDouble(precio);
-			double aux2 = Convert.ToDouble(TempData["Total"].ToString());
-			double total = aux2 + (aux * cantidad);
-			return Json(total);
-		}
+		
 		public ActionResult Cerrar()
         {
 			Quitar_usuario();
