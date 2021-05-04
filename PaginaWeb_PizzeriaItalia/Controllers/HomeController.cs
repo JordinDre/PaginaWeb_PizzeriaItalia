@@ -23,7 +23,6 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			TempData["Nombre"] = null;
 			TempData["Tipo"] = null;
 			TempData["Total"] = 0;
-			TempData["Compra"] = new List<Tablas.Pizza>();
 			Compras.Clear();
 		}
 		public void Calcular_Total()
