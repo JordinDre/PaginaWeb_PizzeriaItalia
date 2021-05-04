@@ -89,7 +89,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			Quitar_usuario();
 			return RedirectToAction("InicioSesion");
         }
-		public IActionResult Privacy()
+		public IActionResult RastrearPedido()
 		{
 			return View();
 		}
