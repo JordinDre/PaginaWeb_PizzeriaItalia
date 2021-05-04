@@ -28,37 +28,23 @@
                                     <span class="navbar-toggler-icon"></span>
                                 </button>
                                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                                    <ul class="navbar-nav flex-grow-1">
+									<ul class="navbar-nav flex-grow-1">
 
-                                        <li class="nav-item">
-                                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Cerrar">Rastrear Pedido</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Cerrar"></a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <button type="button" class="btn btn-default btn-sm" id="compra">
-                                                <h4>Compra</h4>
-                                            </button>
-                                            <script>
-                                            @*$("#compra").click(function ()
-                                            {
-                                                var url = "@Url.Action("Obtener_compra","Home")";
-                                                $.post(url).done(function (data) {
-                                                    $('#detalles').modal('show');
-                                                });
-
-                                            })*@
-                                            </script>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link text-dark"></a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Cerrar">Cerrar Sesion</a>
-                                        </li>
-
-                                    </ul>
+										<li class="nav-item">
+											<a class="nav-link text-dark btn btn-outline-light " asp-area="" asp-controller="Home" asp-action="RastrearPedido">Rastrear Pedido</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link text-dark btn btn-outline-light" asp-area="" asp-controller="Home" asp-action="Cerrar">Cerrar Sesion</a>
+										</li>
+										<li class="nav-item">
+											<a class="nav-link text-dark position-absolute top-50 start-50 translate-middle btn btn-outline-light" asp-area="" asp-controller="Home" asp-action="Compra">
+												<div class="text-center">
+													<img src="~/img/index/carro.png" class="rounded" alt="">
+                                                    Compra
+												</div>
+											</a>
+										</li>
+									</ul>
                                 </div>
                             </div>
                         </nav>
