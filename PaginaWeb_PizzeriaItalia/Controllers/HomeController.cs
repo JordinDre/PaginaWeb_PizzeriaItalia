@@ -15,6 +15,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 	{
 		public static List<Tablas.Detalle_pedido> Compras = new List<Tablas.Detalle_pedido>();
 		public static List<Tablas.Pizza> Pizzas = new List<Tablas.Pizza>();
+		public decimal Total = 0;
 		private readonly ILogger<HomeController> _logger;
 
 		public void Quitar_usuario()
@@ -22,12 +23,24 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			TempData["Cod_usuario"] = null;
 			TempData["Nombre"] = null;
 			TempData["Tipo"] = null;
-			TempData["Total"] = 0;
+			ViewData["Total"] = 0;
 			Compras.Clear();
 		}
 		public void Calcular_Total()
         {
-
+			Total = 0;
+			foreach (var item in Compras)
+            {
+				Database.Reiniciar();
+				SqlCommand consulta = new SqlCommand("Select * from pizza where cod_pizza = '"+item.Cod_pizza+"'",Database.conectar);
+				SqlDataReader Leer = consulta.ExecuteReader();
+				while(Leer.Read())
+                {
+					Total += decimal.Multiply(Convert.ToDecimal(Leer[2]),item.Cantidad);
+					Total = decimal.Round(Total, 2);
+                };
+            }
+			ViewData["Total"] = Total;
         }
 		public HomeController(ILogger<HomeController> logger)
 		{
@@ -37,10 +50,12 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
         {
 			Tablas.Detalle_pedido detalle_pedido = new Tablas.Detalle_pedido(Compras.Count, 1, Convert.ToInt32(cod_pizza), Convert.ToInt32(cantidad));
 			Compras.Add(detalle_pedido);
-			return Content("Agregado");
+			Calcular_Total();
+			return Content(Total.ToString());
 		}
 		public IActionResult Index()
 		{
+			ViewData["Total"] = 0;
 			if (TempData["Nombre"] is null)
 			{
 				return RedirectToAction("InicioSesion");
@@ -134,7 +149,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 				}
 				else
 				{
-					TempData["Total"] = 0;
+					ViewData["Total"] = 0;
 					TempData["Tipo"] = usuario.Tipo;
 					TempData["Cod_usuario"] = usuario.Cod_cliente;
 					TempData["Nombre"] = usuario.Nombre;
@@ -171,7 +186,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 					TempData["Cod_usuario"] = (int)Leer[0];
 				}
 				TempData["Tipo"] = 1;
-				TempData["Total"] = 0;
+				ViewData["Total"] = 0;
 				TempData["Nombre"] = nombre;
 				return RedirectToAction("Index");
 			}else
