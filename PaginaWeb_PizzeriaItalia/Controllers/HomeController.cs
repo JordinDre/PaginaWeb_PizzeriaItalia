@@ -136,7 +136,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
             {
                 if (usuario.Tipo == 0)
                 {
-					return View();
+					return RedirectToAction("Admin");
 				}
 				else
 				{
@@ -144,14 +144,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 					TempData["Tipo"] = usuario.Tipo;
 					TempData["Cod_usuario"] = usuario.Cod_cliente;
 					TempData["Nombre"] = usuario.Nombre;
-                    if (usuario.Tipo == 1)
-					{
-						return RedirectToAction("Index");
-					}else
-                    {
-						//admin
-						return View();
-                    }
+                  	return RedirectToAction("Index");
 				}
             }
         }

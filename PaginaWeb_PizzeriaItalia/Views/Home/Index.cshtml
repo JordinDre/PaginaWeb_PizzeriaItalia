@@ -153,10 +153,10 @@
                                                 var x = $('#Txt_cod_pizza').text();
                                                 var y = $('#Txt_cantidad').val();
                                                 var z = $('#Txt_precio').text();
-                                                var data = { cod_pizza: x , cantidad : y , precio : z};
+                                                var data = { cod_pizza: x , cantidad: y , precio: z};
                                                 $.post(url, data).done(function (data)
                                                 {
-                                                    alert("Hola");
+                                                    $("#pizza").modal().hide();
                                                 });
 
                                             })
