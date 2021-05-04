@@ -3,7 +3,7 @@
     ViewData["Title"] = TempData["Nombre"];
     Tablas.Pizza Selecionado = new Tablas.Pizza(0, "", 0, "");
     List<Tablas.Pizza> Pedido = new List<Tablas.Pizza>();
-
+    TempData.Keep();
 }
 
 
@@ -69,7 +69,8 @@
                                 var x = this.id;
                                 var data = { cod_pizza: x , nombre : '', precio : 1, foto : ""};
                                 $.post(url, data).done(function (data) {
-                                    $('#Txt_imagen').attr("src", ""+data.foto+"");
+                                    $('#Txt_imagen').attr("src", "" + data.foto + "");
+                                    $('#Txt_cod_pizza').text(data.cod_pizza);
                                     $('#Txt_nombre').text(data.nombre);
                                     $('#Txt_precio').text(data.precio);
                                     $('#Txt_total').text(data.precio);
@@ -91,6 +92,7 @@
                 <div class="modal-content" id="Tb_Pizza">
 
                     <div class="modal-header">
+                        <h6 id="Txt_cod_pizza" hidden> </h6>
                         <h3 class="modal-title" id="Txt_nombre"> </h3>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
@@ -143,7 +145,22 @@
                                         </div>
                                         <br />
                                         <div class="row">
-                                            <button type="button" class="btn btn-primary">Agregar</button>
+                                            <button type="button" class="btn btn-primary" id="Btn_agregar">Agregar</button>
+                                            <script>
+                                            $("#Btn_agregar").click(function ()
+                                            {
+                                                var url = "@Url.Action("Agregar_pizza","Home")";
+                                                var x = $('#Txt_cod_pizza').text();
+                                                var y = $('#Txt_cantidad').val();
+                                                var z = $('#Txt_precio').text();
+                                                var data = { cod_pizza: x , cantidad : y , precio : z};
+                                                $.post(url, data).done(function (data)
+                                                {
+                                                    alert("Hola");
+                                                });
+
+                                            })
+                                            </script>
                                         </div>
                                         <br />
                                     </div>

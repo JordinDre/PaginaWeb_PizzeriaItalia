@@ -16,6 +16,15 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		public static List<Tablas.Pizza> Compras = new List<Tablas.Pizza>();
 		private readonly ILogger<HomeController> _logger;
 
+		public void Quitar_usuario()
+        {
+			TempData["Cod_usuario"] = null;
+			TempData["Nombre"] = null;
+			TempData["Tipo"] = null;
+			TempData["Total"] = 0;
+			TempData["Compra"] = new List<Tablas.Pizza>();
+		}
+
 		public HomeController(ILogger<HomeController> logger)
 		{
 			_logger = logger;
@@ -26,10 +35,10 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			if (TempData["Nombre"] is null)
 			{
 				return RedirectToAction("InicioSesion");
-
 			}
 			else
 			{
+				TempData.Keep();
 				Database.Abrir();
 				Datos.Tb_Pizza.Clear();
 				SqlCommand consulta = new SqlCommand("Select * from pizza", Database.conectar);
@@ -45,7 +54,6 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 				}
 				return View(Datos.Tb_Pizza);
 			}
-			TempData.Keep();
 			
 		}
 		[HttpPost]
@@ -65,9 +73,26 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			}
 			return Json(pizza);
 		}
+
+		[HttpPost]
+		public JsonResult Agregar_pizza(int cod_pizza, int cantidad, string precio)
+		{
+			List<Tablas.Detalle_pedido> Tb_detalles = TempData["Compras"] as List<Tablas.Detalle_pedido>;
+            if (Tb_detalles == null)
+            {
+				Tb_detalles = new List<Tablas.Detalle_pedido>();
+            }
+			Tablas.Detalle_pedido detalle_pedido = new Tablas.Detalle_pedido(Tb_detalles.Count, 1, cod_pizza, cantidad);
+			Tb_detalles.Add(detalle_pedido);
+			TempData["Compras"] = Tb_detalles;
+			double aux = Convert.ToDouble(precio);
+			double aux2 = Convert.ToDouble(TempData["Total"].ToString());
+			double total = aux2 + (aux * cantidad);
+			return Json(total);
+		}
 		public ActionResult Cerrar()
         {
-			TempData["Nombre"] = null;
+			Quitar_usuario();
 			return RedirectToAction("InicioSesion");
         }
 		public IActionResult Privacy()
@@ -76,7 +101,22 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		}
 		public IActionResult InicioSesion()
 		{
-			return View();
+			if (TempData["Nombre"] == null)
+			{
+				return View();
+			}
+			else
+            {
+                if (TempData["Tipo"].ToString().Equals("1"))
+                {
+					return RedirectToAction("Index");
+				}
+				else
+                {
+					//admin
+					return View();
+                }
+            }
 		} 
 		[HttpPost]
 		public ActionResult InicioSesion(string correo, string contra)
@@ -99,9 +139,19 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 					return View();
 				}
 				else
-                {
+				{
+					TempData["Total"] = 0;
+					TempData["Tipo"] = usuario.Tipo;
+					TempData["Cod_usuario"] = usuario.Cod_cliente;
 					TempData["Nombre"] = usuario.Nombre;
-					return RedirectToAction("Index");
+                    if (usuario.Tipo == 1)
+					{
+						return RedirectToAction("Index");
+					}else
+                    {
+						//admin
+						return View();
+                    }
 				}
             }
         }
@@ -110,6 +160,40 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		{
 			return View();
 		}
+		[HttpPost]
+		public ActionResult Registrarse(String nombre, String telefono, String correo, String contra)
+        {
+			int aux = 0;
+			Database.Reiniciar();
+			SqlCommand consulta = new SqlCommand("Select * From cliente Where correo = '" + correo + "'", Database.conectar);
+			SqlDataReader Leer = consulta.ExecuteReader();
+			while (Leer.Read())
+			{
+				aux++;
+			}
+            if (aux==0)
+            {
+				Database.Reiniciar();
+				consulta = new SqlCommand("Insert into cliente(tipo, nombre, telefono, correo, contra) Values('1','" + nombre + "','" + telefono + "','" + correo + "','" + contra + "')", Database.conectar);
+				consulta.ExecuteNonQuery();
+				Database.Reiniciar();
+				consulta = new SqlCommand("Select * From cliente Where correo = '" + correo + "'", Database.conectar);
+				Leer = consulta.ExecuteReader();
+				while (Leer.Read())
+				{
+					TempData["Cod_usuario"] = (int)Leer[0];
+				}
+				TempData["Tipo"] = 1;
+				TempData["Total"] = 0;
+				TempData["Nombre"] = nombre;
+				return RedirectToAction("Index");
+			}else
+            {
+				TempData["Error"] = "Correo ingresado";
+				return View();
+            }
+		}
+
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error()

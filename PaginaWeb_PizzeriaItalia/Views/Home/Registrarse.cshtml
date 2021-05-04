@@ -18,38 +18,17 @@
 <body>
 	<br><span class="fs-2 badge bg-info text-dark position-relative top-0 start-50 translate-middle-x">Registrarse</span><br><br><br>
 	<img src="~/img/InicioSesion/login.png" class="rounded mx-auto d-block position-relative" alt="..."><br><br><br>
-	<form class="row g-3">
-		<div class="col-md-6">
-			<label for="inputEmail4" class="form-label">Correo</label>
-			<input type="email" class="form-control" id="inputEmail4">
-		</div>
-		<div class="col-md-6">
-			<label for="inputPassword4" class="form-label">Contraseña</label>
-			<input type="password" class="form-control" id="inputPassword4">
-		</div>
-		<div class="col-12">
-			<label for="inputAddress" class="form-label">Direccion</label>
-			<input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
-		</div>
-		<div class="row g-3">
-			<div class="col">
-				<input type="text" class="form-control" placeholder="First name" aria-label="First name">
-			</div>
-			<div class="col">
-				<input type="text" class="form-control" placeholder="Last name" aria-label="Last name">
-			</div>
-		</div>
-		<div class="col-12">
-			<div class="form-check">
-				<input class="form-check-input" type="checkbox" id="gridCheck">
-				<label class="form-check-label" for="gridCheck">
-					Check me out
-				</label>
-			</div>
-		</div>
-		<div class="col-12">
-			<button type="submit" class="btn btn-primary">Registrar</button>
-		</div>
+	<form class="row" method="post">
+		<label for="inputAddress" class="form-label">Nombre</label>
+		<input type="text" class="form-control" id="nombre" name="nombre" required autofocus>
+		<label for="inputAddress" class="form-label">Telefono</label>
+		<input type="tel" class="form-control" id="telefono" name="telefono" required>
+		<label for="inputEmail4" class="form-label">Correo</label>
+		<input type="email" class="form-control" id="correo" name="correo" required>
+		<label for="inputPassword4" class="form-label">Contraseña</label>
+		<input type="password" class="form-control" id="contra" name="contra" required>
+        <br/>
+        <button class="btn btn-lg btn-primary btn-block" style="max-height:50%" type="submit">Registrarse</button>
 	</form>
 	<br><br><br><br>
 </body>
