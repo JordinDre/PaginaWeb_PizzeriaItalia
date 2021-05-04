@@ -67,7 +67,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		}
 		public ActionResult Cerrar()
         {
-			TempData["Nombre"] = "";
+			TempData["Nombre"] = null;
 			return RedirectToAction("InicioSesion");
         }
 		public IActionResult Privacy()
