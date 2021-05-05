@@ -41,39 +41,13 @@
 										<li class="nav-item">
 											<a class="nav-link text-dark btn btn-outline-light" asp-area="" asp-controller="Home" asp-action="Cerrar">Cerrar Sesion</a>
 										</li>
-										<li class="nav-item">
-											<!-- Button trigger modal -->
-											<button type="button" class="btn btn-outline-dark position-absolute top-50 start-50 translate-middle btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
-												<img src="~/img/index/carro.png" class="rounded" alt="">
-												<label id="Total">Q.0.00</label>
-											</button>
-
-											<!-- Modal -->
-											<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-												<div class="modal-dialog">
-													<div class="modal-content">
-														<div class="modal-header">
-															<h5 class="modal-title" id="exampleModalLabel">ORDEN</h5>
-															<button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-														</div>
-														<div class="modal-body">
-															Monto minimo Q50.00
-                                                            <br /><br /><br />
-															<label id="Total">TOTAL Q.0.00</label>
-														</div>
-														<div class="modal-footer">
-															<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-															<button type="button" class="btn btn-primary">Pagar</button>
-														</div>
-													</div>
-												</div>
-											</div>
-
-											<a class="nav-link text-dark position-absolute top-50 start-50 translate-middle btn btn-outline-light" asp-area="" asp-controller="Home" asp-action="Compra">
-                                                <div class="text-center">
-                                                    <img src="~/img/index/carro.png" class="rounded" alt="">
-                                                    <label id="Total">Q.0.00</label>
-                                                    <script>
+                                        <li class="nav-item">
+                                            <!-- Button trigger modal -->
+                                            <button type="button" class="text-dark btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                                <img src="~/img/index/carro.png" class="rounded" alt="">
+                                                <h6 id="Total">Q.0.00</h6>
+                                            </button>
+                                            <script>
                                                     $(function () {
                                                         $('#Total').ready(function () {
                                                             $.ajax({
@@ -86,10 +60,28 @@
                                                             });
                                                         })
                                                     });
-                                                    </script>
+                                            </script>
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">ORDEN</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Monto minimo Q50.00
+                                                            <br /><br /><br />
+                                                            <label id="1">TOTAL Q.0.00</label>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                                            <button type="button" class="btn btn-primary">Pagar</button>
+                                                        </div>
+                                                    </div>
                                                 </div>
-											</a>
-										</li>
+                                            </div>
+                                        </li>
 									</ul>
                                 </div>
                             </div>
