@@ -193,7 +193,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 				else
                 {
 					TempData.Keep();
-					return RedirectToAction("Admin");
+					return RedirectToAction("Admin","Administrador");
 				}
             }
 		} 
@@ -218,7 +218,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 				TempData["Nombre"] = usuario.Nombre;
 				if (usuario.Tipo == 0)
                 {
-					return RedirectToAction("Admin");
+					return RedirectToAction("Admin", "Administrador");
 				}
 				else
 				{

@@ -10,7 +10,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 	public class Administrador : Controller
 	{
 		// GET: Administrador
-		public ActionResult Index()
+		public ActionResult Admin()
 		{
 			return View();
 		}
@@ -25,63 +25,6 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		public ActionResult Create()
 		{
 			return View();
-		}
-
-		// POST: Administrador/Create
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Create(IFormCollection collection)
-		{
-			try
-			{
-				return RedirectToAction(nameof(Index));
-			}
-			catch
-			{
-				return View();
-			}
-		}
-
-		// GET: Administrador/Edit/5
-		public ActionResult Edit(int id)
-		{
-			return View();
-		}
-
-		// POST: Administrador/Edit/5
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Edit(int id, IFormCollection collection)
-		{
-			try
-			{
-				return RedirectToAction(nameof(Index));
-			}
-			catch
-			{
-				return View();
-			}
-		}
-
-		// GET: Administrador/Delete/5
-		public ActionResult Delete(int id)
-		{
-			return View();
-		}
-
-		// POST: Administrador/Delete/5
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public ActionResult Delete(int id, IFormCollection collection)
-		{
-			try
-			{
-				return RedirectToAction(nameof(Index));
-			}
-			catch
-			{
-				return View();
-			}
 		}
 
 		public ActionResult cliente()
