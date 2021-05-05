@@ -26,7 +26,7 @@
                     if (TempData["Tipo"].ToString().Equals("1"))
                     {
                         TempData.Keep();
-                        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 ">
+                        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
                             <div class="container">
                                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Hola @TempData["Nombre"]</a>
                                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -130,10 +130,44 @@
                     }
                     else
                     {
-                        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 ">
-                            <div class="container">
-                                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Admin">Hola @TempData["Nombre"]</a>
-                            </div>
+
+                        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+							<div class="container">
+								<a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Admin">Hola @TempData["Nombre"]</a>
+								<button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+										aria-expanded="false" aria-label="Toggle navigation">
+									<span class="navbar-toggler-icon"></span>
+								</button>
+							</div>
+							<div class="container navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+								<ul class="navbar-nav flex-grow-1">
+									<li class="nav-item">
+										<a class="nav-link text-dark btn btn-outline-light " asp-area="" asp-controller="Administrador" asp-action="cliente">Cliente</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link text-dark btn btn-outline-light " asp-area="" asp-controller="Administrador" asp-action="bodega">Bodega</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link text-dark btn btn-outline-light " asp-area="" asp-controller="Administrador" asp-action="bodega_ingrediente">Ingredientes en Bodega</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link text-dark btn btn-outline-light " asp-area="" asp-controller="Administrador" asp-action="detalle_pedido">Detalles del Pedidos</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link text-dark btn btn-outline-light " asp-area="" asp-controller="Administrador" asp-action="ingrediente">Ingredientes</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link text-dark btn btn-outline-light " asp-area="" asp-controller="Administrador" asp-action="pizza">Pizza</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link text-dark btn btn-outline-light " asp-area="" asp-controller="Administrador" asp-action="pizza_ingrediente">Ingredientes de Pizza</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link text-dark btn btn-outline-light " asp-area="" asp-controller="Administrador" asp-action="tienda">Tienda</a>
+									</li>
+								</ul>
+							</div>
+
                         </nav>
                     }
                 }
