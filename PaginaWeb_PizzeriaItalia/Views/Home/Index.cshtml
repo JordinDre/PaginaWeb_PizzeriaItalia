@@ -156,7 +156,7 @@
                                                             var cod_pizza = $('#cod_pizza').val();
                                                             var cantidad = $('#cantidad').val();
                                                             $.ajax({
-                                                                url: "@Url.Action("Agregar")",
+                                                                url: "@Url.Action("Agregar","Home")",
                                                                 data: { cod_pizza: cod_pizza, cantidad: cantidad },
                                                                 type: "POST",
                                                                 success: function (response) {

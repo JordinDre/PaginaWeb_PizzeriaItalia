@@ -23,7 +23,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			TempData["Cod_usuario"] = null;
 			TempData["Nombre"] = null;
 			TempData["Tipo"] = null;
-			ViewData["Total"] = 0;
+			ViewData["Total"] = null;
 			Compras.Clear();
 		}
 		public void Calcular_Total()
@@ -53,9 +53,14 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			Calcular_Total();
 			return Content(Total.ToString());
 		}
+
+		public ActionResult Obtener_total()
+        {
+			Calcular_Total();
+			return Content(Total.ToString());
+		}
 		public IActionResult Index()
 		{
-			ViewData["Total"] = 0;
 			if (TempData["Nombre"] is null)
 			{
 				return RedirectToAction("InicioSesion");
@@ -95,6 +100,10 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 				pizza.Precio = (double)Leer[2];
 				pizza.Foto = (string)Leer[3];
 			}
+            if (pizza.Foto.Length<10)
+            {
+				pizza.Foto = "https://www.cuballama.com/envios/images/imagen-no-encontrada.png";
+			}
 			return Json(pizza);
 		}
 
@@ -106,7 +115,30 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
         }
 		public IActionResult RastrearPedido()
 		{
-			return View();
+            if (TempData["Cod_usuario"] != null)
+            {
+				TempData.Keep();
+                if (TempData["Tipo"].ToString().Equals("1"))
+                {
+					Database.Reiniciar();
+					SqlCommand consulta = new SqlCommand("Select Pe.cod_pedido as orden, (Case When Pe.tipo_pedido = 1 THEN 'Online' When Pe.tipo_pedido >= 2 THEN 'Tienda' END) as tipo_pedido, TI.nombre as tienda, Pe.direccion, Pe.fecha, Pe.hora, Pe.total,(Case When Pe.estado = 1 THEN 'Preparación' When Pe.estado = 2 THEN 'Entregado' END) as Estado From pedido PE INNER JOIN tienda TI on TI.cod_tienda = PE.cod_tienda WHERE Pe.cod_cliente = '" + TempData["Cod_usuario"] + "' ORDER BY PE.fecha DESC", Database.conectar);
+					TempData.Keep();
+					SqlDataReader Leer = consulta.ExecuteReader();
+					List<Detalles_auxiliar.Detalle_pedido> aux = new List<Detalles_auxiliar.Detalle_pedido>();
+					while (Leer.Read())
+					{
+						aux.Add(new Detalles_auxiliar.Detalle_pedido((int)Leer[0], (string)Leer[1], (string)Leer[2], (string)Leer[3], (DateTime)Leer[4], (TimeSpan)Leer[5], (double)Leer[6], (string)Leer[7]));
+					}
+					return View(aux);
+				}else
+                {
+					return RedirectToAction("InicioSesion");
+				}
+			}
+			else
+            {
+				return RedirectToAction("InicioSesion");
+			}
 		}
 		public IActionResult InicioSesion()
 		{
@@ -116,15 +148,17 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			}
 			else
             {
+				TempData.Keep();
                 if (TempData["Tipo"].ToString().Equals("1"))
                 {
+					TempData.Keep();
 					return RedirectToAction("Index");
 				}
 				else
                 {
-					//admin
-					return View();
-                }
+					TempData.Keep();
+					return RedirectToAction("Admin");
+				}
             }
 		} 
 		[HttpPost]
@@ -149,7 +183,6 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 				}
 				else
 				{
-					ViewData["Total"] = 0;
 					TempData["Tipo"] = usuario.Tipo;
 					TempData["Cod_usuario"] = usuario.Cod_cliente;
 					TempData["Nombre"] = usuario.Nombre;
@@ -186,7 +219,6 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 					TempData["Cod_usuario"] = (int)Leer[0];
 				}
 				TempData["Tipo"] = 1;
-				ViewData["Total"] = 0;
 				TempData["Nombre"] = nombre;
 				return RedirectToAction("Index");
 			}else
