@@ -148,6 +148,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 				TempData.Keep();
                 if (TempData["Tipo"].ToString().Equals("1"))
                 {
+					TempData.Keep();
 					Database.Reiniciar();
 					SqlCommand consulta = new SqlCommand("Select Pe.cod_pedido as orden, (Case When Pe.tipo_pedido = 1 THEN 'Online' When Pe.tipo_pedido >= 2 THEN 'Tienda' END) as tipo_pedido, TI.nombre as tienda, Pe.direccion, Pe.fecha, Pe.hora, Pe.total,(Case When Pe.estado = 1 THEN 'Preparación' When Pe.estado = 2 THEN 'Entregado' END) as Estado From pedido PE INNER JOIN tienda TI on TI.cod_tienda = PE.cod_tienda WHERE Pe.cod_cliente = '" + TempData["Cod_usuario"] + "' ORDER BY PE.fecha DESC", Database.conectar);
 					TempData.Keep();
@@ -155,7 +156,14 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 					List<Detalles_auxiliar.Detalle_pedido> aux = new List<Detalles_auxiliar.Detalle_pedido>();
 					while (Leer.Read())
 					{
-						aux.Add(new Detalles_auxiliar.Detalle_pedido((int)Leer[0], (string)Leer[1], (string)Leer[2], (string)Leer[3], (DateTime)Leer[4], (TimeSpan)Leer[5], (double)Leer[6], (string)Leer[7]));
+                        try
+						{
+							aux.Add(new Detalles_auxiliar.Detalle_pedido((int)Leer[0], (string)Leer[1], (string)Leer[2], (string)Leer[3], (DateTime)Leer[4], (TimeSpan)Leer[5], (double)Leer[6], (string)Leer[7]));
+						}
+						catch (Exception)
+                        {
+							aux.Add(new Detalles_auxiliar.Detalle_pedido());
+						}
 					}
 					return View(aux);
 				}else
