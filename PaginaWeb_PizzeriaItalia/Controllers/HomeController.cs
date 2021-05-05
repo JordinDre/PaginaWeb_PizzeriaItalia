@@ -69,6 +69,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 
 		public ActionResult Obtener_total()
         {
+			Database.Reiniciar();
 			Calcular_Total();
 			return Content(Total.ToString());
 		}
@@ -102,7 +103,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		public JsonResult Obtener_pizza(int cod_pizza, string nombre, string precio, string foto)
 		{
 			Tablas.Pizza pizza = new Tablas.Pizza();
-			Database.Abrir();
+			Database.Reiniciar();
 			Datos.Tb_Pizza.Clear();
 			SqlCommand consulta = new SqlCommand("Select * from pizza where cod_pizza = '" + cod_pizza + "'", Database.conectar);
 			SqlDataReader Leer = consulta.ExecuteReader();
@@ -122,6 +123,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		[HttpPost]
 		public JsonResult Obtener_detalle(int cod_pizza, string foto, string nombre, int cantidad, double precio)
 		{
+			Database.Reiniciar();
 			List<Detalles_auxiliar.Detalle_pedido2> Lista_aux = new List<Detalles_auxiliar.Detalle_pedido2>();
             foreach (var item in Compras)
             {
@@ -138,11 +140,13 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 
 		public ActionResult Cerrar()
         {
+			Database.Reiniciar();
 			Quitar_usuario();
 			return RedirectToAction("InicioSesion");
         }
 		public IActionResult RastrearPedido()
 		{
+			Database.Reiniciar();
             if (TempData["Cod_usuario"] != null)
             {
 				TempData.Keep();
