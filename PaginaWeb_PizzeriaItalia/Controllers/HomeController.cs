@@ -205,15 +205,15 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 				return View();
             }else
             {
-                if (usuario.Tipo == 0)
+				TempData["Tipo"] = usuario.Tipo;
+				TempData["Cod_usuario"] = usuario.Cod_cliente;
+				TempData["Nombre"] = usuario.Nombre;
+				if (usuario.Tipo == 0)
                 {
 					return RedirectToAction("Admin");
 				}
 				else
 				{
-					TempData["Tipo"] = usuario.Tipo;
-					TempData["Cod_usuario"] = usuario.Cod_cliente;
-					TempData["Nombre"] = usuario.Nombre;
                   	return RedirectToAction("Index");
 				}
             }
