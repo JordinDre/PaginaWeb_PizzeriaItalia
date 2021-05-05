@@ -31,21 +31,19 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                @{
-                    foreach (var item in Model)
-                    {
-                        <td>@item.Orden</td>
-                        <td>@item.Tipo_pedido</td>
-                        <td>@item.Tienda</td>
-                        <td>@item.Direccion</td>
-                        <td>@item.Fecha.ToString("dd-MM-yyyy")</td>
-                        <td>@item.Hora</td>
-                        <td>@item.Total</td>
-                        <td>@item.Estado</td>
-                    }
-                }
-            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Orden</td>
+                    <td>@item.Tipo_pedido</td>
+                    <td>@item.Tienda</td>
+                    <td>@item.Direccion</td>
+                    <td>@item.Fecha.ToString("dd-MM-yyyy")</td>
+                    <td>@item.Hora</td>
+                    <td>@item.Total</td>
+                    <td>@item.Estado</td>
+                </tr>
+            }
         </tbody>
     </table>
 
