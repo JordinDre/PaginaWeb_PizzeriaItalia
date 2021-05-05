@@ -20,47 +20,47 @@
     <script src="https://code.jquery.com/jquery-1.10.0.min.js" integrity="sha256-2+LznWeWgL7AJ1ciaIG5rFP7GKemzzl+K75tRyTByOE=" crossorigin="anonymous"></script>
 </head>
 <body>
-        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
-            <div class="carousel-indicators ">
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-            </div>
-            <div class="carousel-inner">
-                <div class="carousel-item active ratio ratio-21x9">
-                    <img src="~/img/index/portada1.jpg" class="d-block w-100" alt="...">
-                </div>
-                <div class="carousel-item ratio ratio-21x9">
-                    <img src="~/img/index/portada2.jpg" class="d-block w-100" alt="...">
-                </div>
-                <div class="carousel-item ratio ratio-21x9">
-                    <img src="~/img/index/portada3.jpg" class="d-block w-100" alt="...">
-                </div>
-            </div>
-            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </button>
-            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </button>
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators ">
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
         </div>
-        <br><br>
-        <div class="container " style="margin: 0 auto; display: flex;">
-            <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
-                @foreach (var item in Model)
-                {
-                    <div class="col-sm-6 rounded-0">
-                        <div class="p-3">
-                            <input type="hidden" name="x" value="@item.Cod_pizza" />
-                            <button type="button" id="@item.Cod_pizza" class="btn btn-outline-dark rounded-bottom">
-                                <h4>@item.Nombre</h4>
-                                <img src=@item.Foto style="max-width:100%; width: 200px; height: 150px" class="rounded-circle" />
-                                <h4>Precio</h4>
-                                <h4>Q.@item.Precio</h4>
-                            </button>
-                            <script>
+        <div class="carousel-inner">
+            <div class="carousel-item active ratio ratio-21x9">
+                <img src="~/img/index/portada1.jpg" class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item ratio ratio-21x9">
+                <img src="~/img/index/portada2.jpg" class="d-block w-100" alt="...">
+            </div>
+            <div class="carousel-item ratio ratio-21x9">
+                <img src="~/img/index/portada3.jpg" class="d-block w-100" alt="...">
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+    <br><br>
+    <div class="container " style="margin: 0 auto; display: flex;">
+        <div class="row row-cols-2 row-cols-lg-5 g-2 g-lg-3">
+            @foreach (var item in Model)
+            {
+                <div class="col-sm-6 rounded-0">
+                    <div class="p-3">
+                        <input type="hidden" name="x" value="@item.Cod_pizza" />
+                        <button type="button" id="@item.Cod_pizza" class="btn btn-outline-dark rounded-bottom">
+                            <h4>@item.Nombre</h4>
+                            <img src=@item.Foto style="max-width:100%; width: 200px; height: 150px" class="rounded-circle" />
+                            <h4>Precio</h4>
+                            <h4>Q.@item.Precio</h4>
+                        </button>
+                        <script>
                             $("#" +@item.Cod_pizza).click(function ()
                             {
                                 var url = "@Url.Action("Obtener_pizza","Home")";
@@ -78,78 +78,77 @@
                                 });
 
                             })
-                            </script>
-                        </div>
+                        </script>
                     </div>
-                }
-                <div class="w-100"></div>
-            </div>
+                </div>
+            }
+            <div class="w-100"></div>
         </div>
-        <br /><br /><br /><br />
-        <!-- Modal Pizza-->
-        <div class="modal fade" id="pizza" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content" id="">
-                    <div class="modal-header">
-                        <h6 id="Txt_cod_pizza" hidden> </h6>
-                        <h3 class="modal-title" id="Txt_nombre"> </h3>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-sm">
-                                    <img id="Txt_imagen" style="display: block; height: auto; max-width: 100%" />
-                                </div>
-                                <div class="col-sm">
-                                    <div class="container">
-                                        <div class="row">
-                                            <div class="col-sm">
-                                                <h4>Precio</h4>
-                                            </div>
-                                            <div class="col-sm">
-                                                <h4 id="Txt_precio"> </h4>
-                                            </div>
+    </div>
+    <br /><br /><br /><br />
+    <!-- Modal Pizza-->
+    <div class="modal fade" id="pizza" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" id="">
+                <div class="modal-header">
+                    <h6 id="Txt_cod_pizza" hidden> </h6>
+                    <h3 class="modal-title" id="Txt_nombre"> </h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm">
+                                <img id="Txt_imagen" style="display: block; height: auto; max-width: 100%" />
+                            </div>
+                            <div class="col-sm">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <h4>Precio</h4>
                                         </div>
-                                        <br />
-                                        <div class="row">
-                                            <div class="col-sm">
-                                                <div class="row">
-                                                    <div class="col-sm">
-                                                        <h4>Cantidad</h4>
-                                                    </div>
-                                                    <div class="col-sm">
-                                                        <input class="form-control" type="number" value="1" min="1" id="Txt_cantidad">
-                                                    </div>
-                                                    <script>
-                                                $('#Txt_cantidad').on("input", function ()
-                                                {
-                                                    var x = parseInt($(this).val());
-                                                    $('#cantidad').val(x);
-                                                    var y = parseFloat($('#Txt_precio').text());
-                                                    var total = x * y;
-                                                    $('#Txt_total').text(total);
-                                                });
-                                                    </script>
+                                        <div class="col-sm">
+                                            <h4 id="Txt_precio"> </h4>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <div class="row">
+                                                <div class="col-sm">
+                                                    <h4>Cantidad</h4>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <br />
-                                        <div class="row">
-                                            <div class="col-sm">
-                                                <h4 class="align-content-center">Total</h4>
-                                            </div>
-                                            <div class="col-sm">
-                                                <h4 class="align-content-center" id="Txt_total"></h4>
-                                            </div>
-                                        </div>
-                                        <br />
-                                        <div class="row">
-                                            <form class="row" method="post">
-                                                <input hidden name="cod_pizza" id="cod_pizza" value=""/>
-                                                <input hidden name="cantidad" id="cantidad" value=""/>  
-                                                <button type="button" class="btn btn-primary" id="Btn" name="Btn">Agregar</button>
+                                                <div class="col-sm">
+                                                    <input class="form-control" type="number" value="1" min="1" id="Txt_cantidad">
+                                                </div>
                                                 <script>
+                                                    $('#Txt_cantidad').on("input", function () {
+                                                        var x = parseInt($(this).val());
+                                                        $('#cantidad').val(x);
+                                                        var y = parseFloat($('#Txt_precio').text());
+                                                        var total = x * y;
+                                                        $('#Txt_total').text(total);
+                                                    });
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-sm">
+                                            <h4 class="align-content-center">Total</h4>
+                                        </div>
+                                        <div class="col-sm">
+                                            <h4 class="align-content-center" id="Txt_total"></h4>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <form class="row" method="post">
+                                            <input hidden name="cod_pizza" id="cod_pizza" value="" />
+                                            <input hidden name="cantidad" id="cantidad" value="" />
+                                            <button type="button" class="btn btn-primary" id="Btn" name="Btn">Agregar</button>
+                                            <script>
                                                     $(function () {
                                                         $('#Btn').click(function () {
                                                             var cod_pizza = $('#cod_pizza').val();
@@ -159,21 +158,21 @@
                                                                 data: { cod_pizza: cod_pizza, cantidad: cantidad },
                                                                 type: "POST",
                                                                 success: function (response) {
+                                                                    $("#Txt_cantidad").val(1);
                                                                     $('#Total').text("Q." + response);
                                                                     $('#Total2').text("Q." + response);
                                                                     $('#pizza').modal('hide');
                                                                 }
                                                             });
                                                         })
-                                                        
+
                                                     });
-                                                </script>
-                                            </form>
-                                            <script>
                                             </script>
-                                        </div>
-                                        <br />
+                                        </form>
+                                        <script>
+                                        </script>
                                     </div>
+                                    <br />
                                 </div>
                             </div>
                         </div>
@@ -181,5 +180,6 @@
                 </div>
             </div>
         </div>
+    </div>
 </body>
 </html>

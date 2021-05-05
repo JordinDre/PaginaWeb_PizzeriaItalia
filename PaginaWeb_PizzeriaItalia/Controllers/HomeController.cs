@@ -13,9 +13,6 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 {
 	public class HomeController : Controller
 	{
-		public static List<Tablas.Detalle_pedido> Compras = new List<Tablas.Detalle_pedido>();
-		public static List<Tablas.Pizza> Pizzas = new List<Tablas.Pizza>();
-		public double Total = 0;
 		private readonly ILogger<HomeController> _logger;
 
 		public void Quitar_usuario()
@@ -24,12 +21,12 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			TempData["Nombre"] = null;
 			TempData["Tipo"] = null;
 			ViewData["Total"] = null;
-			Compras.Clear();
+			Datos.Compras.Clear();
 		}
 		public void Calcular_Total()
         {
-			Total = 0;
-			foreach (var item in Compras)
+			Datos.Total = 0;
+			foreach (var item in Datos.Compras)
             {
                 try
                 {
@@ -38,7 +35,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 					SqlDataReader Leer = consulta.ExecuteReader();
 					while (Leer.Read())
 					{
-						Total += Convert.ToDouble(Leer["Precio"]) * item.Cantidad;
+						Datos.Total += Convert.ToDouble(Leer["Precio"]) * item.Cantidad;
 					};
 				}
                 catch (Exception)
@@ -46,7 +43,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 
                 }
             }
-			ViewData["Total"] = Total;
+			ViewData["Total"] = Datos.Total;
         }
 		public HomeController(ILogger<HomeController> logger)
 		{
@@ -54,10 +51,10 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		}
 		public ActionResult Agregar(String cod_pizza, String cantidad)
         {
-			Tablas.Detalle_pedido detalle_pedido = new Tablas.Detalle_pedido(Compras.Count, 1, Convert.ToInt32(cod_pizza), Convert.ToInt32(cantidad));
-			Compras.Add(detalle_pedido);
+			Tablas.Detalle_pedido detalle_pedido = new Tablas.Detalle_pedido(Datos.Compras.Count, 1, Convert.ToInt32(cod_pizza), Convert.ToInt32(cantidad));
+			Datos.Compras.Add(detalle_pedido);
 			Calcular_Total();
-			string aux = Total.ToString();
+			string aux = Datos.Total.ToString();
             if (aux.Contains('.'))
             {
             }else
@@ -71,7 +68,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
         {
 			Database.Reiniciar();
 			Calcular_Total();
-			return Content(Total.ToString());
+			return Content(Datos.Total.ToString());
 		}
 		public IActionResult Index()
 		{
@@ -82,7 +79,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			else
 			{
 				TempData.Keep();
-				Pizzas.Clear();
+				Datos.Pizzas.Clear();
 				Database.Reiniciar();
 				SqlCommand consulta = new SqlCommand("Select * from pizza", Database.conectar);
 				SqlDataReader Leer = consulta.ExecuteReader();
@@ -93,9 +90,9 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 					{
 						url = "https://www.cuballama.com/envios/images/imagen-no-encontrada.png";
 					}
-					Pizzas.Add(new Tablas.Pizza((int)Leer[0], (string)Leer[1], (double)Leer[2], url));
+					Datos.Pizzas.Add(new Tablas.Pizza((int)Leer[0], (string)Leer[1], (double)Leer[2], url));
 				}
-				return View(Pizzas);
+				return View(Datos.Pizzas);
 			}
 			
 		}
@@ -104,7 +101,6 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		{
 			Tablas.Pizza pizza = new Tablas.Pizza();
 			Database.Reiniciar();
-			Datos.Tb_Pizza.Clear();
 			SqlCommand consulta = new SqlCommand("Select * from pizza where cod_pizza = '" + cod_pizza + "'", Database.conectar);
 			SqlDataReader Leer = consulta.ExecuteReader();
 			while (Leer.Read())
@@ -125,7 +121,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		{
 			Database.Reiniciar();
 			List<Detalles_auxiliar.Detalle_pedido2> Lista_aux = new List<Detalles_auxiliar.Detalle_pedido2>();
-            foreach (var item in Compras)
+            foreach (var item in Datos.Compras)
             {
 				Database.Reiniciar();
 				SqlCommand consulta = new SqlCommand("Select * from pizza where cod_pizza = '"+item.Cod_pizza+"'", Database.conectar);
