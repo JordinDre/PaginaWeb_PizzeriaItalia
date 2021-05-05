@@ -15,7 +15,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 	{
 		public static List<Tablas.Detalle_pedido> Compras = new List<Tablas.Detalle_pedido>();
 		public static List<Tablas.Pizza> Pizzas = new List<Tablas.Pizza>();
-		public decimal Total = 0;
+		public double Total = 0;
 		private readonly ILogger<HomeController> _logger;
 
 		public void Quitar_usuario()
@@ -31,14 +31,20 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			Total = 0;
 			foreach (var item in Compras)
             {
-				Database.Reiniciar();
-				SqlCommand consulta = new SqlCommand("Select * from pizza where cod_pizza = '"+item.Cod_pizza+"'",Database.conectar);
-				SqlDataReader Leer = consulta.ExecuteReader();
-				while(Leer.Read())
+                try
                 {
-					Total += decimal.Multiply(Convert.ToDecimal(Leer[2]),item.Cantidad);
-					Total = decimal.Round(Total, 2);
-                };
+					Database.Reiniciar();
+					SqlCommand consulta = new SqlCommand("Select * from pizza where cod_pizza = '" + item.Cod_pizza + "'", Database.conectar);
+					SqlDataReader Leer = consulta.ExecuteReader();
+					while (Leer.Read())
+					{
+						Total += Convert.ToDouble(Leer["Precio"]) * item.Cantidad;
+					};
+				}
+                catch (Exception)
+                {
+
+                }
             }
 			ViewData["Total"] = Total;
         }
@@ -51,7 +57,14 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			Tablas.Detalle_pedido detalle_pedido = new Tablas.Detalle_pedido(Compras.Count, 1, Convert.ToInt32(cod_pizza), Convert.ToInt32(cantidad));
 			Compras.Add(detalle_pedido);
 			Calcular_Total();
-			return Content(Total.ToString());
+			string aux = Total.ToString();
+            if (aux.Contains('.'))
+            {
+            }else
+            {
+				aux += ".00";
+            }
+			return Content(aux);
 		}
 
 		public ActionResult Obtener_total()
@@ -69,7 +82,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			{
 				TempData.Keep();
 				Pizzas.Clear();
-				Database.Abrir();
+				Database.Reiniciar();
 				SqlCommand consulta = new SqlCommand("Select * from pizza", Database.conectar);
 				SqlDataReader Leer = consulta.ExecuteReader();
 				while (Leer.Read())
@@ -106,8 +119,23 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			}
 			return Json(pizza);
 		}
+		[HttpPost]
+		public JsonResult Obtener_detalle(int cod_pizza, string foto, string nombre, int cantidad, double precio)
+		{
+			List<Detalles_auxiliar.Detalle_pedido2> Lista_aux = new List<Detalles_auxiliar.Detalle_pedido2>();
+            foreach (var item in Compras)
+            {
+				Database.Reiniciar();
+				SqlCommand consulta = new SqlCommand("Select * from pizza where cod_pizza = '"+item.Cod_pizza+"'", Database.conectar);
+				SqlDataReader Leer = consulta.ExecuteReader();
+				while(Leer.Read())
+                {
+					Lista_aux.Add(new Detalles_auxiliar.Detalle_pedido2(item.Cod_pizza, (string)Leer[3], (string)Leer[1],item.Cantidad,(item.Cantidad*(double)Leer[2])));
+                }
+            }
+			return Json(Lista_aux);
+		}
 
-		
 		public ActionResult Cerrar()
         {
 			Quitar_usuario();

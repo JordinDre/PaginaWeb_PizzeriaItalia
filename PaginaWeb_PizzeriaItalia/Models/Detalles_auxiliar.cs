@@ -30,5 +30,22 @@ namespace PaginaWeb_PizzeriaItalia.Models
                 Estado = _Estado;
             }
         }
+        public class Detalle_pedido2
+        {
+            public int Cod_pizza { get; set; }
+            public String Foto { get; set; }
+            public String Nombre { get; set; }
+            public int Cantidad { get; set; }
+            public double Precio { get; set; }
+            public Detalle_pedido2() { }
+            public Detalle_pedido2(int _Cod_pizza, String _Foto, String _Nombre, int _Cantidad, double _Precio)
+            {
+                Cod_pizza = _Cod_pizza;
+                Foto = _Foto;
+                Nombre = _Nombre;
+                Cantidad = _Cantidad;
+                Precio = _Precio;
+            }
+        }
     }
 }

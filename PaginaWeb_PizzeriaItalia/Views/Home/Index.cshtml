@@ -89,8 +89,7 @@
         <!-- Modal Pizza-->
         <div class="modal fade" id="pizza" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
-                <div class="modal-content" id="Tb_Pizza">
-
+                <div class="modal-content" id="">
                     <div class="modal-header">
                         <h6 id="Txt_cod_pizza" hidden> </h6>
                         <h3 class="modal-title" id="Txt_nombre"> </h3>
@@ -126,7 +125,7 @@
                                                 $('#Txt_cantidad').on("input", function ()
                                                 {
                                                     var x = parseInt($(this).val());
-                                                    $('cantidad').val = x;
+                                                    $('#cantidad').val(x);
                                                     var y = parseFloat($('#Txt_precio').text());
                                                     var total = x * y;
                                                     $('#Txt_total').text(total);
@@ -160,11 +159,13 @@
                                                                 data: { cod_pizza: cod_pizza, cantidad: cantidad },
                                                                 type: "POST",
                                                                 success: function (response) {
-                                                                    $('#Total').text("Q."+response);
+                                                                    $('#Total').text("Q." + response);
+                                                                    $('#Total2').text("Q." + response);
                                                                     $('#pizza').modal('hide');
                                                                 }
                                                             });
                                                         })
+                                                        
                                                     });
                                                 </script>
                                             </form>

@@ -43,7 +43,7 @@
 										</li>
                                         <li class="nav-item">
                                             <!-- Button trigger modal -->
-                                            <button type="button" class="text-dark btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                            <button type="button" class="text-dark btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#Dt_pedido">
                                                 <div class="row">
                                                     <div class="col">
                                                         <img src="~/img/index/carro.png" class="rounded" alt="">
@@ -53,35 +53,66 @@
                                                     </div>
                                                 </div>
                                             </button>
-                                            <script>
-                                                    $(function () {
-                                                        $('#Total').ready(function () {
-                                                            $.ajax({
-                                                                url: "@Url.Action("Obtener_total","HOME")",
-                                                                type: "POST",
-                                                                success: function (response) {
-                                                                    console.log(response);
-                                                                    $('#Total').text("Q."+response);
-                                                                }
-                                                            });
-                                                        })
-                                                    });
-                                            </script>
                                             <!-- Modal -->
-                                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog">
+                                            <div class="modal fade" id="Dt_pedido" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="exampleModalLabel">ORDEN</h5>
+                                                            <h5 class="modal-title" id="">Pedido</h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                         </div>
+                                                        <script>
+                                                            $(function () {
+                                                                $('#Total').ready(function () {
+                                                                    $.ajax({
+                                                                        url: "@Url.Action("Obtener_total","HOME")",
+                                                                        type: "POST",
+                                                                        success: function (response) {
+                                                                            console.log(response);
+                                                                            $('#Total').text("Q." + response);
+                                                                            $('#Total2').text("Total Q." + response);
+                                                                            $('#Tb_Detalle_pedido').children("td").remove();
+                                                                        }
+                                                                    });
+                                                                    $.ajax({
+                                                                        url: "@Url.Action("Obtener_detalle","HOME")",
+                                                                        type: "POST",
+                                                                        data: { cod_pizza: 1, foto: "", nombre: "", cantidad: 1, precio: 1},
+                                                                        success: function (response)
+                                                                        {
+                                                                            $.each(response, function (i, item)
+                                                                            {
+                                                                                $('#Tb_Detalle_pedido').append("<td> <img src= "+item.foto+" style= 'max-width:100%; width: 100px; height: 100px' class='rounded-circle' /></td>");
+                                                                                $('#Tb_Detalle_pedido').append("<td>" + item.nombre + "</td>");
+                                                                                $('#Tb_Detalle_pedido').append("<td>" + item.cantidad + "</td>");
+                                                                                $('#Tb_Detalle_pedido').append("<td>" + item.precio + "</td>");
+                                                                                $('#Tb_Detalle_pedido').append("<td>   </td>");
+                                                                            });
+                                                                        }
+                                                                    });
+                                                                })
+                                                            })
+                                                        </script>
                                                         <div class="modal-body">
-                                                            Monto minimo Q50.00
-                                                            <br /><br /><br />
-                                                            <label id="1">TOTAL Q.0.00</label>
+                                                            <table class="table caption-top">
+                                                                <thead class="table-responsive table-light">
+                                                                    <tr>
+                                                                        <th scope="col">Foto</th>
+                                                                        <th scope="col">Nombre</th>
+                                                                        <th scope="col">Cantidad</th>
+                                                                        <th scope="col">Precio</th>
+                                                                        <th scope="col">Eliminar</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr id="Tb_Detalle_pedido">
+                                                                       
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            <label id="Total2">Total Q.0.00</label>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                                                             <button type="button" class="btn btn-primary">Pagar</button>
                                                         </div>
                                                     </div>
@@ -95,7 +126,7 @@
                     }
                     else
                     {
-                        //admin
+                        
                     }
                 }
             }

@@ -25,13 +25,12 @@ namespace PaginaWeb_PizzeriaItalia.Models
             if (conectar.State == ConnectionState.Open)
             {
                 conectar.Close();
-                //conectar.Dispose();
             }
         }
         public static void Reiniciar()
         {
-            conectar.Close();
-            conectar.Open();
+            Cerrar();
+            Abrir();
         }
     }
 }
