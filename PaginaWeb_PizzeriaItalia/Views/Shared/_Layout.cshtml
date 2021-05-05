@@ -36,7 +36,7 @@
 									<ul class="navbar-nav flex-grow-1">
 
 										<li class="nav-item">
-											<a class="nav-link text-dark btn btn-outline-light " asp-area="" asp-controller="Home" asp-action="RastrearPedido">Rastrear Pedido</a>
+											<a class="nav-link text-dark btn btn-outline-light " asp-area="" asp-controller="Home" asp-action="RastrearPedido">Pedidos</a>
 										</li>
 										<li class="nav-item">
 											<a class="nav-link text-dark btn btn-outline-light" asp-area="" asp-controller="Home" asp-action="Cerrar">Cerrar Sesion</a>
@@ -44,8 +44,14 @@
                                         <li class="nav-item">
                                             <!-- Button trigger modal -->
                                             <button type="button" class="text-dark btn btn-outline-light" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                                <img src="~/img/index/carro.png" class="rounded" alt="">
-                                                <h6 id="Total">Q.0.00</h6>
+                                                <div class="row">
+                                                    <div class="col">
+                                                        <img src="~/img/index/carro.png" class="rounded" alt="">
+                                                    </div>
+                                                    <div class="col align-content-lg-center">
+                                                        <h6 id="Total">Q.0.00</h6>
+                                                    </div>
+                                                </div>
                                             </button>
                                             <script>
                                                     $(function () {
