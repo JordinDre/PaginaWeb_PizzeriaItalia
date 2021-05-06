@@ -133,6 +133,122 @@
             </tr>
         </tbody>
     </table>
+    <caption>Agregar Inventario</caption>
+    <table class="table caption-top">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">Bodega</th>
+                <th scope="col">Ingrediente</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Opciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <form method="post" action="/Administrador/bodega_ingrediente2">
+                    <td>
+                        <input name="Codigo_Bodega" id="Codigo_Bodega2" hidden required />
+                        <select class="mdb-select md-form" id="Box_Bodega2">
+                        </select>
+                        <script>
+							$('#Box_Bodega2').ready(function () {
+								var url = "@Url.Action("Obtener_bodega","Administrador")";
+                                var x = "";
+                                var data = { nombre: x};
+								$.post(url, data).done(function (data)
+								{
+									$("#Box_Bodega2").empty();
+                                    console.log(data);
+									$.each(data, function (i, item)
+									{
+										console.log(i);
+										if (i == 0)
+										{
+                                            $("#Codigo_Bodega2").val(item);
+                                            $("#Box_Bodega2").append("<option selected value='" + i + "'>" + item + "</option>")
+										} else
+										{
+                                            $("#Box_Bodega2").append("<option value='" + i + "'>" + item + "</option>")
+                                        }
+                                    });
+                                });
+                            });
+                            $('#Box_Bodega2').on('change', function (e) {
+                                var optionSelected = $(this).find("option:selected");
+                                var valueSelected = optionSelected.val();
+                                var textSelected = optionSelected.text();
+                                $("#Codigo_Bodega2").val(textSelected);
+
+                                var url = "@Url.Action("Obtener_bodega_ingrediente2", "Administrador")";
+                                var x = "";
+                                var y = textSelected;
+                                var data = {cod_bodega:y , nombre: x};
+								$.post(url, data).done(function (data)
+								{
+									$("#Box_Ingrediente2").empty();
+                                    console.log(data);
+									$.each(data, function (i, item)
+									{
+										console.log(i);
+										if (i == 0)
+										{
+                                            $("#Codigo_Ingrediente2").val(item);
+                                            $("#Box_Ingrediente2").append("<option selected value='" + i + "'>" + item + "</option>")
+										} else
+										{
+                                            $("#Box_Ingrediente2").append("<option value='" + i + "'>" + item + "</option>")
+                                        }
+                                    });
+                                });
+                            });
+                        </script>
+                    </td>
+                    <td>
+                        <input name="Codigo_Ingrediente" id="Codigo_Ingrediente2" hidden required />
+                        <select class="mdb-select md-form" id="Box_Ingrediente2">
+                        </select>
+                        <script>
+                            $('#Box_Ingrediente2').ready(function () {
+								var url = "@Url.Action("Obtener_bodega_ingrediente2", "Administrador")";
+                                var x = "";
+                                var y = "Bodega1";
+                                var data = {cod_bodega:y , nombre: x};
+								$.post(url, data).done(function (data)
+								{
+									$("#Box_Ingrediente2").empty();
+                                    console.log(data);
+									$.each(data, function (i, item)
+									{
+										console.log(i);
+										if (i == 0)
+										{
+                                            $("#Codigo_Ingrediente2").val(item);
+                                            $("#Box_Ingrediente2").append("<option selected value='" + i + "'>" + item + "</option>")
+										} else
+										{
+                                            $("#Box_Ingrediente2").append("<option value='" + i + "'>" + item + "</option>")
+                                        }
+                                    });
+                                });
+                            });
+							$('#Box_Ingrediente2').on('change', function (e) {
+                                var optionSelected = $(this).find("option:selected");
+                                var valueSelected = optionSelected.val();
+                                var textSelected = optionSelected.text();
+                                $("#Codigo_Ingrediente2").val(textSelected);
+                            });
+                        </script>
+                    </td>
+                    <td>
+                        <input name="Cantidad" type="number" min="0" required />
+                    </td>
+                    <td>
+                        <button type='submit' style='max-width: 100%; width: 100%; height: 100%' class="btn btn-info">Agregar</button>
+                    </td>
+                </form>
+            </tr>
+        </tbody>
+    </table>
 
     <table class="table caption-top">
         <thead class="table-dark">

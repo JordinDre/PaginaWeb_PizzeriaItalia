@@ -44,7 +44,6 @@ namespace PaginaWeb_PizzeriaItalia.Models
             Abrir();
             SqlCommand consulta = new SqlCommand(_consulta, conectar);
             consulta.ExecuteNonQuery();
-            Cerrar();
         }
     }
 }

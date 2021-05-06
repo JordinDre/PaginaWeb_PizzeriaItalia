@@ -191,6 +191,38 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			return View(aux);
 		}
 		[HttpPost]
+		public ActionResult bodega_ingrediente2(string Codigo_Bodega, string Codigo_Ingrediente, int Cantidad)
+		{
+			int _Cod_bodega = 0;
+			int _Cod_ingrediente = 0;
+			int _cantidad = 0;
+			string _consulta = "Select * from bodega where nombre = '" + Codigo_Bodega + "'";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
+			while (Leer.Read())
+			{
+				_Cod_bodega = (int)Leer[0];
+			}
+
+			_consulta = "Select * from ingrediente where nombre = '" + Codigo_Ingrediente + "'";
+			Leer = Database.Consulta_Reader(_consulta);
+			while (Leer.Read())
+			{
+				_Cod_ingrediente = (int)Leer[0];
+			}
+
+			_consulta = " Select* From bodega_ingrediente BI Where Bi.cod_bodega = '"+_Cod_bodega+"' and Bi.cod_ingrediente = '"+_Cod_ingrediente+"'";
+			Leer = Database.Consulta_Reader(_consulta);
+            while (Leer.Read())
+            {
+				_cantidad = (int)Leer[3];
+            }
+			int _Total = _cantidad + Cantidad;
+			//Actualizar
+			_consulta = "UPDATE bodega_ingrediente SET cantidad = '"+_Total+"' WHERE cod_bodega = '"+_Cod_bodega+ "' and cod_ingrediente = '" + _Cod_bodega + "'";
+			Database.Consulta_Non(_consulta);
+			return RedirectToAction("bodega_ingrediente", "Administrador");
+		}
+		[HttpPost]
 		public JsonResult Obtener_bodega(string nombre)
 		{
 			string _consulta = "Select * from bodega";
@@ -214,7 +246,18 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			}
 			return Json(aux);
 		}
-
+		[HttpPost]
+		public JsonResult Obtener_bodega_ingrediente2(string cod_bodega, string nombre)
+		{
+			string _consulta = "Select BI.cod_ingrediente, I.nombre From bodega_ingrediente BI INNER JOIN ingrediente I on I.cod_ingrediente = Bi.cod_ingrediente INNER JOIN bodega B on B.cod_bodega = BI.cod_bodega Where B.nombre = 'Bodega1'";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
+			List<string> aux = new List<string>();
+			while (Leer.Read())
+			{
+				aux.Add((String)Leer[1]);
+			}
+			return Json(aux);
+		}
 		public ActionResult detalle_pedido()
 		{
 			bool Comprobar = Comprobar_Usuario();
