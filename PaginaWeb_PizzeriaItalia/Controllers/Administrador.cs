@@ -229,8 +229,34 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 
 		public ActionResult pizza_ingrediente()
 		{
-			return View();
+			Database.Reiniciar();
+			SqlCommand consulta = new SqlCommand("Select * from pizza_ingrediente", Database.conectar);
+			SqlDataReader Leer = consulta.ExecuteReader();
+			List<Tablas.Pizza_ingrediente> aux = new List<Tablas.Pizza_ingrediente>();
+			while (Leer.Read())
+			{
+				aux.Add(new Tablas.Pizza_ingrediente((int)Leer[0], (int)Leer[1], (int)Leer[2], (int)Leer[3]));
+			}
+			return View(aux);
 		}
+
+		[HttpPost]
+		public ActionResult pizza_ingrediente(int Codigo_Pizza, int Codigo_Ingrediente, int Cantidad)
+		{
+			Database.Reiniciar();
+			SqlCommand consulta = new SqlCommand("insert into bodega_ingrediente(cod_bodega,cod_ingrediente,cantidad) values ('" + Codigo_Pizza + "', '" + Codigo_Ingrediente + "', '" + Cantidad + "')", Database.conectar);
+			consulta.ExecuteNonQuery();
+			Database.Reiniciar();
+			consulta = new SqlCommand("Select * from pizza_ingrediente", Database.conectar);
+			SqlDataReader Leer = consulta.ExecuteReader();
+			List<Tablas.Pizza_ingrediente> aux = new List<Tablas.Pizza_ingrediente>();
+			while (Leer.Read())
+			{
+				aux.Add(new Tablas.Pizza_ingrediente((int)Leer[0], (int)Leer[1], (int)Leer[2], (int)Leer[3]));
+			}
+			return View(aux);
+		}
+
 
 		public ActionResult tienda()
 		{
