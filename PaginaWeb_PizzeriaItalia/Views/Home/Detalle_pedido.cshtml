@@ -22,26 +22,64 @@
 
     </head>
     <body>
-        <form class="form-signin" action="/home/Detalle_pedido" method="post">
+        
             <table class="table caption-top">
                 <thead class="table-light">
                     <tr>
-                        <th scope="col" valign="middle" align="center"> 
-                            <label for="inputEmail" class="sr-only">Direccion</label> 
-                        </th>
-                        <th scope="col" valign="middle" align="center">
-                            <input name="total" value="@Total" hidden />
-                            <input name="direccion" type="text" id="x" class="form-control" placeholder="" required autofocus>
-                        </th>
-                        <th scope="col" valign="middle" align="right">
-                            <button class="btn btn-lg btn-primary btn-block" type="submit">Hacer Pedido</button>
-                        </th>
+                        <th scope="col">Tienda</th>
+                        <th scope="col">Direccion</th>
+                        <th scope="col">Opciones</th>
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <form class="form-signin" action="/home/Detalle_pedido" method="post">
+                            <td>
+                                <input name="Codigo_Tienda" id="Codigo_Tienda" value="1" hidden required />
+                                <select class="mdb-select md-form" id="Box_tienda">
+                                </select>
+                                <script>
+							    $('#Box_tienda').ready(function () {
+								    var url = "@Url.Action("Obtener_tienda","Administrador")";
+                                    var x = "";
+                                    var data = { nombre: x};
+								    $.post(url, data).done(function (data)
+								    {
+									    $("#Box_tienda").empty();
+                                        console.log(data);
+									    $.each(data, function (i, item)
+									    {
+										    console.log(i);
+										    if (i == 0)
+										    {
+                                                $("#Codigo_Tienda").val(item);
+                                                $("#Box_tienda").append("<option selected value='" + i + "'>" + item + "</option>")
+										    } else
+										    {
+                                                $("#Box_tienda").append("<option value='" + i + "'>" + item + "</option>")
+                                            }
+                                        });
+                                    });
+                                });
+                                $('#Box_tienda').on('change', function (e) {
+                                    var optionSelected = $(this).find("option:selected");
+                                    var valueSelected = optionSelected.val();
+                                    var textSelected = optionSelected.text();
+								    $("#Codigo_Tienda").val(textSelected);
+                                });
+                                </script>
+                            </td>
+                            <td scope="col" valign="middle" align="center">
+                                <input name="total" value="@Total" hidden />
+                                <input name="direccion" type="text" id="x" class="form-control" placeholder="" required autofocus>
+                            </td>
+                            <td scope="col" valign="middle" align="center">
+                                <button class="btn btn-lg btn-primary btn-block" type="submit">Hacer Pedido</button>
+                            </td>
+                        </form>
+                    </tr>
                 </tbody>
             </table>
-        </form>
         <table class="table caption-top">
             <caption>Detalle del pedido</caption>
             <thead class="table-dark">

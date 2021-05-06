@@ -89,21 +89,27 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			}
 		}
 		[HttpPost]
-		public ActionResult Detalle_pedido(string direccion, double total)
+		public ActionResult Detalle_pedido(string Codigo_Tienda, string direccion, double total)
         {
-			string _consulta = "";
+			int _Cod_tienda = 0;
+			String _consulta = "Select * from tienda where nombre = '" + Codigo_Tienda + "'";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
+			while (Leer.Read())
+			{
+				_Cod_tienda = (int)Leer[0];
+			}
 			//Hacer pedido actualizar para colocar tienda
 			int cod_pedido = 0;
 			DateTime fecha = DateTime.Now;
 			TimeSpan hora = DateTime.Now.TimeOfDay;
 			
-			_consulta ="Insert into pedido(tipo_pedido,cod_tienda,cod_cliente,direccion,fecha,hora,total,estado) values('1', '1', '"+TempData["Cod_usuario"]+"', '"+direccion+"', '"+fecha+"', '"+hora+"','"+total+"', '1')";
+			_consulta ="Insert into pedido(tipo_pedido,cod_tienda,cod_cliente,direccion,fecha,hora,total,estado) values('1', '"+_Cod_tienda+"', '"+TempData["Cod_usuario"]+"', '"+direccion+"', '"+fecha+"', '"+hora+"','"+total+"', '1')";
 			TempData.Keep();
 			Database.Consulta_Non(_consulta);
 			
 			_consulta = "Select * from pedido Where cod_cliente = '"+TempData["Cod_usuario"]+ "' and fecha = '"+fecha+ "' and hora = '"+hora+ "' and total = '"+total+"'";
 			TempData.Keep();
-			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
+			Leer = Database.Consulta_Reader(_consulta);
 			while (Leer.Read())
             {
 				cod_pedido = (int)Leer[0];
@@ -220,7 +226,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
                 if (TempData["Tipo"].ToString().Equals("1"))
                 {
 					TempData.Keep();
-					_consulta ="Select Pe.cod_pedido as orden, (Case When Pe.tipo_pedido = 1 THEN 'Online' When Pe.tipo_pedido >= 2 THEN 'Tienda' END) as tipo_pedido, TI.nombre as tienda, Pe.direccion, Pe.fecha, Pe.hora, (Select SUM(detalle_pedido.cantidad*pizza.precio) From detalle_pedido INNER JOIN pizza on pizza.cod_pizza = detalle_pedido.cod_pizza where cod_pedido = PE.cod_pedido)as total, (Case When Pe.estado = 1 THEN 'Preparación' When Pe.estado = 2 THEN 'Enviado' When Pe.estado = 3 THEN 'Entregado' END) as Estado From pedido PE INNER JOIN tienda TI on TI.cod_tienda = PE.cod_tienda WHERE Pe.cod_cliente = '" + TempData["Cod_usuario"] + "' ORDER BY PE.fecha DESC";
+					_consulta ="Select Pe.cod_pedido as orden, (Case When Pe.tipo_pedido = 1 THEN 'Online' When Pe.tipo_pedido >= 2 THEN 'Tienda' END) as tipo_pedido, TI.nombre as tienda, Pe.direccion, Pe.fecha, Pe.hora, (Select SUM(detalle_pedido.cantidad*pizza.precio) From detalle_pedido INNER JOIN pizza on pizza.cod_pizza = detalle_pedido.cod_pizza where cod_pedido = PE.cod_pedido)as total, (Case When Pe.estado = 1 THEN 'Preparación' When Pe.estado = 2 THEN 'Enviado' When Pe.estado = 3 THEN 'Entregado' END) as Estado From pedido PE INNER JOIN tienda TI on TI.cod_tienda = PE.cod_tienda WHERE Pe.cod_cliente = '" + TempData["Cod_usuario"] + "' ORDER BY Pe.cod_pedido DESC";
 					TempData.Keep();
 					SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 					
