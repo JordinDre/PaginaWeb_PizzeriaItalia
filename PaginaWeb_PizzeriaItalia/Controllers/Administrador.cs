@@ -31,9 +31,8 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 
 		public ActionResult cliente()
 		{
-			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("Select * from cliente", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
+			String _consulta = "Select * from cliente";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			List<Tablas.Cliente> aux = new List<Tablas.Cliente>();
 			while (Leer.Read())
 			{
@@ -45,13 +44,12 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		[HttpPost] 
 		public ActionResult cliente(int tipo,String Nombre, String Telefono, String Correo, String Contra)
 		{
-			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("insert into cliente(tipo,nombre,telefono,correo,contra) values ('"+tipo+"', '"+Nombre+ "', '" + Telefono + "', '" + Correo + "', '" + Contra + "')", Database.conectar);
-			consulta.ExecuteNonQuery();
+			//Agregar
+			String _consulta = "insert into cliente(tipo,nombre,telefono,correo,contra) values ('" + tipo + "', '" + Nombre + "', '" + Telefono + "', '" + Correo + "', '" + Contra + "')";
+			Database.Consulta_Non(_consulta);
 
-			Database.Reiniciar();
-			consulta = new SqlCommand("Select * from cliente", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
+			_consulta = "Select * from cliente";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			List<Tablas.Cliente> aux = new List<Tablas.Cliente>();
 			while (Leer.Read())
 			{
@@ -62,9 +60,8 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 
 		public ActionResult bodega()
 		{
-			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("Select Bo.cod_bodega, Bo.nombre,TI.cod_tienda,Ti.nombre from bodega BO INNER JOIN Tienda TI on TI.cod_tienda = Bo.cod_tienda", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
+			String _consulta = "Select Bo.cod_bodega, Bo.nombre,TI.cod_tienda,Ti.nombre from bodega BO INNER JOIN Tienda TI on TI.cod_tienda = Bo.cod_tienda";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			List<Admin_aux.Bodega> aux = new List<Admin_aux.Bodega>();
 			while (Leer.Read())
 			{
@@ -77,19 +74,17 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		public ActionResult bodega(string Codigo_Tienda, string Nombre)
 		{
 			int _Cod_tienda = 0;
-			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("Select * from tienda where nombre = '"+Codigo_Tienda+"'", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
+			String _consulta = "Select * from tienda where nombre = '" + Codigo_Tienda + "'";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
             while (Leer.Read())
             {
 				_Cod_tienda = (int)Leer[0];
             }
-			Database.Reiniciar();
-			consulta = new SqlCommand("insert into bodega(cod_tienda,nombre) values ('" + _Cod_tienda + "', '" + Nombre + "')", Database.conectar);
-			consulta.ExecuteNonQuery();
-			Database.Reiniciar();
-			consulta = new SqlCommand("Select Bo.cod_bodega, Bo.nombre,TI.cod_tienda,Ti.nombre from bodega BO INNER JOIN Tienda TI on TI.cod_tienda = Bo.cod_tienda", Database.conectar);
-			Leer = consulta.ExecuteReader();
+			_consulta = "insert into bodega(cod_tienda,nombre) values ('" + _Cod_tienda + "', '" + Nombre + "')";
+			Database.Consulta_Non(_consulta);
+
+			_consulta = "Select Bo.cod_bodega, Bo.nombre,TI.cod_tienda,Ti.nombre from bodega BO INNER JOIN Tienda TI on TI.cod_tienda = Bo.cod_tienda";
+			Leer = Database.Consulta_Reader(_consulta);
 			List<Admin_aux.Bodega> aux = new List<Admin_aux.Bodega>();
 			while (Leer.Read())
 			{
@@ -100,9 +95,8 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		[HttpPost]
 		public JsonResult Obtener_tienda(string nombre)
 		{
-			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("Select * from tienda", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
+			String _consulta = "Select * from tienda";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			List<string> aux = new List<string>();
 			while (Leer.Read())
 			{
@@ -113,9 +107,8 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 
 		public ActionResult bodega_ingrediente()
 		{
-			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("Select BI.cod_bodega_ingrediente as registro, Bi.cod_bodega, B.nombre, BI.cod_ingrediente, I.nombre as ingrediente, BI.cantidad From bodega_ingrediente BI INNER JOIN Bodega B on B.cod_bodega = BI.cod_bodega INNER JOIN ingrediente I on I.cod_ingrediente = BI.cod_ingrediente ", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
+			string _consulta = "Select BI.cod_bodega_ingrediente as registro, Bi.cod_bodega, B.nombre, BI.cod_ingrediente, I.nombre as ingrediente, BI.cantidad From bodega_ingrediente BI INNER JOIN Bodega B on B.cod_bodega = BI.cod_bodega INNER JOIN ingrediente I on I.cod_ingrediente = BI.cod_ingrediente ";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			List<Admin_aux.Bodega_Ingredientes> aux = new List<Admin_aux.Bodega_Ingredientes>();
 			while (Leer.Read())
 			{
@@ -129,26 +122,25 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		{
 			int _Cod_bodega = 0;
 			int _Cod_ingrediente = 0;
-			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("Select * from bodega where nombre = '" + Codigo_Bodega + "'", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
+			string _consulta = "Select * from bodega where nombre = '" + Codigo_Bodega + "'";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			while (Leer.Read())
 			{
 				_Cod_bodega = (int)Leer[0];
 			}
-			Database.Reiniciar();
-			consulta = new SqlCommand("Select * from ingrediente where nombre = '" + Codigo_Ingrediente + "'", Database.conectar);
-			Leer = consulta.ExecuteReader();
+
+			_consulta = "Select * from ingrediente where nombre = '" + Codigo_Ingrediente + "'";
+			Leer = Database.Consulta_Reader(_consulta);
 			while (Leer.Read())
 			{
 				_Cod_ingrediente = (int)Leer[0];
 			}
-			Database.Reiniciar();
-			consulta = new SqlCommand("insert into bodega_ingrediente(cod_bodega,cod_ingrediente,cantidad) values ('" + _Cod_bodega + "', '" + _Cod_ingrediente + "', '" + Cantidad + "')", Database.conectar);
-			consulta.ExecuteNonQuery();
-			Database.Reiniciar();
-			consulta = new SqlCommand("Select BI.cod_bodega_ingrediente as registro, Bi.cod_bodega, B.nombre, BI.cod_ingrediente, I.nombre as ingrediente, BI.cantidad From bodega_ingrediente BI INNER JOIN Bodega B on B.cod_bodega = BI.cod_bodega INNER JOIN ingrediente I on I.cod_ingrediente = BI.cod_ingrediente ", Database.conectar);
-			Leer = consulta.ExecuteReader();
+
+			_consulta = "insert into bodega_ingrediente(cod_bodega,cod_ingrediente,cantidad) values ('" + _Cod_bodega + "', '" + _Cod_ingrediente + "', '" + Cantidad + "')";
+			Database.Consulta_Non(_consulta);
+
+			_consulta = "Select BI.cod_bodega_ingrediente as registro, Bi.cod_bodega, B.nombre, BI.cod_ingrediente, I.nombre as ingrediente, BI.cantidad From bodega_ingrediente BI INNER JOIN Bodega B on B.cod_bodega = BI.cod_bodega INNER JOIN ingrediente I on I.cod_ingrediente = BI.cod_ingrediente ";
+			Leer = Database.Consulta_Reader(_consulta);
 			List<Admin_aux.Bodega_Ingredientes> aux = new List<Admin_aux.Bodega_Ingredientes>();
 			while (Leer.Read())
 			{
@@ -159,9 +151,8 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		[HttpPost]
 		public JsonResult Obtener_bodega(string nombre)
 		{
-			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("Select * from bodega", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
+			string _consulta = "Select * from bodega";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			List<string> aux = new List<string>();
 			while (Leer.Read())
 			{
@@ -172,9 +163,8 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		[HttpPost]
 		public JsonResult Obtener_bodega_ingrediente(string cod_bodega ,string nombre)
 		{
-			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("Select * from ingrediente where cod_ingrediente NOT IN(Select BI.cod_ingrediente From bodega_ingrediente BI INNER JOIN ingrediente I on I.cod_ingrediente = Bi.cod_ingrediente INNER JOIN bodega B on B.cod_bodega = BI.cod_bodega Where B.nombre = '"+cod_bodega+"')", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
+			string _consulta = "Select * from ingrediente where cod_ingrediente NOT IN(Select BI.cod_ingrediente From bodega_ingrediente BI INNER JOIN ingrediente I on I.cod_ingrediente = Bi.cod_ingrediente INNER JOIN bodega B on B.cod_bodega = BI.cod_bodega Where B.nombre = '" + cod_bodega + "')";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			List<string> aux = new List<string>();
 			while (Leer.Read())
 			{
@@ -191,10 +181,9 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		public ActionResult detalle_pedido(int cod_pedido)
         {
 			TempData["Pedido"] = cod_pedido;
-			Database.Reiniciar();
 			List<Detalles_auxiliar.Detalle_pedido2> Lista_aux = new List<Detalles_auxiliar.Detalle_pedido2>();
-			SqlCommand consulta = new SqlCommand("Select PIZ.cod_pizza,PIZ.foto, PIZ.nombre, DP.cantidad,PIZ.precio From detalle_pedido DP INNER JOIN pizza PIZ on PIZ.cod_pizza = DP.cod_pizza Where DP.cod_pedido = '"+cod_pedido+"'", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
+			string _consulta = "Select PIZ.cod_pizza,PIZ.foto, PIZ.nombre, DP.cantidad,PIZ.precio From detalle_pedido DP INNER JOIN pizza PIZ on PIZ.cod_pizza = DP.cod_pizza Where DP.cod_pedido = '" + cod_pedido + "'";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			while(Leer.Read())
             {
 				Lista_aux.Add(new Detalles_auxiliar.Detalle_pedido2((int)Leer[0], (string)Leer[1], (string)Leer[2], (int)Leer[3], (double)Leer[4]));
@@ -210,9 +199,9 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 
 		public ActionResult ingrediente()
 		{
-			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("Select * from ingrediente", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
+			 
+			string _consulta = "Select * from ingrediente";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			List<Tablas.Ingrediente> aux = new List<Tablas.Ingrediente>();
 			while (Leer.Read())
 			{
@@ -224,12 +213,11 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		[HttpPost]
 		public ActionResult ingrediente(String Nombre)
 		{
-			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("insert into ingrediente(nombre) values ('" + Nombre + "')", Database.conectar);
-			consulta.ExecuteNonQuery();
-			Database.Reiniciar();
-			consulta = new SqlCommand("Select * from ingrediente", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
+			string _consulta = "insert into ingrediente(nombre) values ('" + Nombre + "')";
+			Database.Consulta_Non(_consulta);
+
+			_consulta = "Select * from ingrediente";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			List<Tablas.Ingrediente> aux = new List<Tablas.Ingrediente>();
 			while (Leer.Read())
 			{
@@ -240,9 +228,8 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 
 		public ActionResult pedido()
 		{
-			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("Select Pe.cod_pedido as orden, (Case When Pe.tipo_pedido = 1 THEN 'Online' When Pe.tipo_pedido >= 2 THEN 'Tienda' END) as tipo_pedido, TI.nombre as tienda, CL.nombre as cliente, Pe.direccion, Pe.fecha, Pe.hora, (Select SUM(detalle_pedido.cantidad * pizza.precio) From detalle_pedido INNER JOIN pizza on pizza.cod_pizza = detalle_pedido.cod_pizza where cod_pedido = PE.cod_pedido) as total, (Case When Pe.estado = 1 THEN 'Preparación' When Pe.estado = 2 THEN 'Enviado' When Pe.estado = 3 THEN 'Entregado' END) as Estado From pedido PE INNER JOIN tienda TI on TI.cod_tienda = PE.cod_tienda INNER JOIN cliente CL on Cl.cod_cliente = Pe.cod_cliente Order by Pe.cod_pedido DESC", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
+			string _consulta = "Select Pe.cod_pedido as orden, (Case When Pe.tipo_pedido = 1 THEN 'Online' When Pe.tipo_pedido >= 2 THEN 'Tienda' END) as tipo_pedido, TI.nombre as tienda, CL.nombre as cliente, Pe.direccion, Pe.fecha, Pe.hora, (Select SUM(detalle_pedido.cantidad * pizza.precio) From detalle_pedido INNER JOIN pizza on pizza.cod_pizza = detalle_pedido.cod_pizza where cod_pedido = PE.cod_pedido) as total, (Case When Pe.estado = 1 THEN 'Preparación' When Pe.estado = 2 THEN 'Enviado' When Pe.estado = 3 THEN 'Entregado' END) as Estado From pedido PE INNER JOIN tienda TI on TI.cod_tienda = PE.cod_tienda INNER JOIN cliente CL on Cl.cod_cliente = Pe.cod_cliente Order by Pe.cod_pedido DESC";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			List<Detalles_auxiliar.Detalle_pedido> aux = new List<Detalles_auxiliar.Detalle_pedido>();
 			while (Leer.Read())
 			{
@@ -275,17 +262,15 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 					_tipo = 3;
 					break;
             }
-            Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("UPDATE pedido SET estado = '"+_tipo+"' WHERE cod_pedido = '"+cod_pedido+"'; ", Database.conectar);
-			consulta.ExecuteNonQuery();
+			string _consulta = "UPDATE pedido SET estado = '" + _tipo + "' WHERE cod_pedido = '" + cod_pedido + "'";
+			Database.Consulta_Non(_consulta);
 			return Content("a");
 		}
 
 		public ActionResult pizza()
 		{
-			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("Select * from pizza", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
+			string _consulta = "Select * from pizza";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			List<Tablas.Pizza> aux = new List<Tablas.Pizza>();
 			while (Leer.Read())
 			{
@@ -297,12 +282,11 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		[HttpPost]
 		public ActionResult pizza(String Nombre, double Precio, String Foto)
 		{
-			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("insert into pizza(nombre,precio,foto) values ('" + Nombre + "', '" + Precio + "', '" + Foto + "')", Database.conectar);
-			consulta.ExecuteNonQuery();
-			Database.Reiniciar();
-			consulta = new SqlCommand("Select * from pizza", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
+			string _consulta = "insert into pizza(nombre,precio,foto) values ('" + Nombre + "', '" + Precio + "', '" + Foto + "')";
+			Database.Consulta_Non(_consulta);
+
+			_consulta = "Select * from pizza";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			List<Tablas.Pizza> aux = new List<Tablas.Pizza>();
 			while (Leer.Read())
 			{
@@ -313,9 +297,8 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 
 		public ActionResult pizza_ingrediente()
 		{
-			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("Select BI.cod_pizza_ingrediente as registro, Bi.cod_pizza, B.nombre, BI.cod_ingrediente, I.nombre as ingrediente, BI.cantidad From pizza_ingrediente BI INNER JOIN pizza B on B.cod_pizza = BI.cod_pizza INNER JOIN ingrediente I on I.cod_ingrediente = BI.cod_ingrediente", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
+			string _consulta = "Select BI.cod_pizza_ingrediente as registro, Bi.cod_pizza, B.nombre, BI.cod_ingrediente, I.nombre as ingrediente, BI.cantidad From pizza_ingrediente BI INNER JOIN pizza B on B.cod_pizza = BI.cod_pizza INNER JOIN ingrediente I on I.cod_ingrediente = BI.cod_ingrediente";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			List<Admin_aux.Pizza_Ingredientes> aux = new List<Admin_aux.Pizza_Ingredientes>();
 			while (Leer.Read())
 			{
@@ -327,12 +310,12 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		[HttpPost]
 		public ActionResult pizza_ingrediente(int Codigo_Pizza, int Codigo_Ingrediente, int Cantidad)
 		{
-			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("insert into bodega_ingrediente(cod_bodega,cod_ingrediente,cantidad) values ('" + Codigo_Pizza + "', '" + Codigo_Ingrediente + "', '" + Cantidad + "')", Database.conectar);
-			consulta.ExecuteNonQuery();
-			Database.Reiniciar();
-			consulta = new SqlCommand("Select BI.cod_pizza_ingrediente as registro, Bi.cod_pizza, B.nombre, BI.cod_ingrediente, I.nombre as ingrediente, BI.cantidad From pizza_ingrediente BI INNER JOIN pizza B on B.cod_pizza = BI.cod_pizza INNER JOIN ingrediente I on I.cod_ingrediente = BI.cod_ingrediente", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
+			string _consulta = "insert into bodega_ingrediente(cod_bodega,cod_ingrediente,cantidad) values ('" + Codigo_Pizza + "', '" + Codigo_Ingrediente + "', '" + Cantidad + "')";
+			Database.Consulta_Non(_consulta);
+
+			_consulta = "Select BI.cod_pizza_ingrediente as registro, Bi.cod_pizza, B.nombre, BI.cod_ingrediente, I.nombre as ingrediente, BI.cantidad From pizza_ingrediente BI INNER JOIN pizza B on B.cod_pizza = BI.cod_pizza INNER JOIN ingrediente I on I.cod_ingrediente = BI.cod_ingrediente";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
+			
 			List<Admin_aux.Pizza_Ingredientes> aux = new List<Admin_aux.Pizza_Ingredientes>();
 			while (Leer.Read())
 			{
@@ -343,9 +326,9 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		[HttpPost]
 		public JsonResult Obtener_pizza(string nombre)
 		{
-			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("Select * from pizza", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
+			string _consulta = "Select * from pizza";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
+
 			List<string> aux = new List<string>();
 			while (Leer.Read())
 			{
@@ -356,9 +339,10 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		[HttpPost]
 		public JsonResult Obtener_pizza_ingrediente(string cod_pizza, string nombre)
 		{
-			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("Select * from ingrediente where cod_ingrediente NOT IN(Select BI.cod_ingrediente From pizza_ingrediente BI INNER JOIN ingrediente I on I.cod_ingrediente = Bi.cod_ingrediente INNER JOIN pizza B on B.cod_pizza = BI.cod_pizza Where B.nombre = '"+cod_pizza+"')", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
+			 
+			string _consulta = "Select * from ingrediente where cod_ingrediente NOT IN(Select BI.cod_ingrediente From pizza_ingrediente BI INNER JOIN ingrediente I on I.cod_ingrediente = Bi.cod_ingrediente INNER JOIN pizza B on B.cod_pizza = BI.cod_pizza Where B.nombre = '" + cod_pizza + "')";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
+			
 			List<string> aux = new List<string>();
 			while (Leer.Read())
 			{
@@ -369,9 +353,9 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 
 		public ActionResult tienda()
 		{
-			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("Select * from tienda", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
+			string _consulta = "Select * from tienda";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
+
 			List<Tablas.Tienda> aux = new List<Tablas.Tienda>();
 			while (Leer.Read())
 			{
@@ -383,12 +367,11 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		[HttpPost]
 		public ActionResult tienda(String Nombre, String Direccion, String Ciudad, String Foto)
 		{
-			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("insert into tienda(nombre,direccion,ciudad,foto) values ('" + Nombre + "', '" + Direccion + "', '" + Ciudad + "', '" + Foto + "')", Database.conectar);
-			consulta.ExecuteNonQuery();
-			Database.Reiniciar();
-			consulta = new SqlCommand("Select * from tienda", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
+			string _consulta = "insert into tienda(nombre,direccion,ciudad,foto) values ('" + Nombre + "', '" + Direccion + "', '" + Ciudad + "', '" + Foto + "')";
+			Database.Consulta_Non(_consulta);
+
+			_consulta = "Select * from tienda";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			List<Tablas.Tienda> aux = new List<Tablas.Tienda>();
 			while (Leer.Read())
 			{
