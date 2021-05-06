@@ -120,6 +120,23 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 				Database.Consulta_Non(_consulta);
             }
 			Datos.Compras.Clear();
+
+			int _cod_bodega = 0;
+			_consulta = "Select TOP(1)* from bodega Where cod_tienda = '" + _Cod_tienda + "'";
+			Leer = Database.Consulta_Reader(_consulta);
+            while (Leer.Read())
+            {
+				_cod_bodega = (int)Leer[0];
+            }
+
+			_consulta = "Select * From FN_ingredientes_restantes('"+cod_pedido+"','"+_Cod_tienda+"')";
+			Leer = Database.Consulta_Reader(_consulta);
+            while (Leer.Read())
+            {
+				_consulta = "UPDATE bodega_ingrediente SET cantidad = '" + Leer[2] + "' WHERE cod_bodega = '" + _cod_bodega + "' and cod_ingrediente = '" + Leer[0] + "'";
+				Database.Consulta_Non(_consulta);
+            }
+
 			return RedirectToAction("RastrearPedido");
 		}
 		[HttpPost]
