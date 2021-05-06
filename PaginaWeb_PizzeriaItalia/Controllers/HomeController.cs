@@ -16,7 +16,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		private readonly ILogger<HomeController> _logger;
 
 		public void Quitar_usuario()
-        {
+		{
 			TempData["Cod_usuario"] = null;
 			TempData["Nombre"] = null;
 			TempData["Tipo"] = null;
@@ -24,12 +24,13 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			Datos.Compras.Clear();
 		}
 		public void Calcular_Total()
-        {
+		{
 			Datos.Total = 0;
+			List<Tablas.Detalle_pedido> aux2 = new List<Tablas.Detalle_pedido>();
 			foreach (var item in Datos.Compras)
-            {
-                try
-                {
+			{
+				try
+				{
 					Database.Reiniciar();
 					SqlCommand consulta = new SqlCommand("Select * from pizza where cod_pizza = '" + item.Cod_pizza + "'", Database.conectar);
 					SqlDataReader Leer = consulta.ExecuteReader();
@@ -38,25 +39,99 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 						Datos.Total += Convert.ToDouble(Leer["Precio"]) * item.Cantidad;
 					};
 				}
-                catch (Exception)
-                {
+				catch (Exception)
+				{
 
+				}
+			}
+			ViewData["Total"] = Datos.Total;
+		}
+		public ActionResult Detalle_pedido()
+		{
+			Database.Reiniciar();
+			List<Detalles_auxiliar.Detalle_pedido2> Lista_aux = new List<Detalles_auxiliar.Detalle_pedido2>();
+			if (Datos.Compras.Count > 0)
+			{
+				foreach (var item in Datos.Compras)
+				{
+					Database.Reiniciar();
+					SqlCommand consulta = new SqlCommand("Select * from pizza where cod_pizza = '" + item.Cod_pizza + "'", Database.conectar);
+					SqlDataReader Leer = consulta.ExecuteReader();
+					while (Leer.Read())
+					{
+						Lista_aux.Add(new Detalles_auxiliar.Detalle_pedido2(item.Cod_pizza, (string)Leer[3], (string)Leer[1], item.Cantidad, (double)Leer[2]));
+					}
+				}
+				return View(Lista_aux);
+			}
+			else
+			{
+				return RedirectToAction("Index");
+			}
+		}
+		[HttpPost]
+		public ActionResult Detalle_pedido(string direccion, double total)
+        {
+			//Hacer pedido actualizar para colocar tienda
+			int cod_pedido = 0;
+			DateTime fecha = DateTime.Now;
+			TimeSpan hora = DateTime.Now.TimeOfDay;
+			Database.Reiniciar();
+			SqlCommand consulta = new SqlCommand("Insert into pedido(tipo_pedido,cod_tienda,cod_cliente,direccion,fecha,hora,total,estado) values('1', '1', '"+TempData["Cod_usuario"]+"', '"+direccion+"', '"+fecha+"', '"+hora+"','"+total+"', '1')", Database.conectar);
+			TempData.Keep();
+			consulta.ExecuteNonQuery();
+			Database.Reiniciar();
+			consulta = new SqlCommand("Select * from pedido Where cod_cliente = '"+TempData["Cod_usuario"]+ "' and fecha = '"+fecha+ "' and hora = '"+hora+ "' and total = '"+total+"'", Database.conectar);
+			TempData.Keep();
+			SqlDataReader Leer = consulta.ExecuteReader();
+			while (Leer.Read())
+            {
+				cod_pedido = (int)Leer[0];
+            }
+            foreach (var item in Datos.Compras)
+            {
+				Database.Reiniciar();
+				consulta = new SqlCommand("insert into detalle_pedido(cod_pedido,cod_pizza,cantidad) values('"+cod_pedido+"', '"+item.Cod_pizza+"', '"+item.Cantidad+"')", Database.conectar);
+				consulta.ExecuteNonQuery();
+            }
+			Datos.Compras.Clear();
+			return RedirectToAction("RastrearPedido");
+		}
+		[HttpPost]
+		public ActionResult Detalle_pedido2(int cod_pizza, int cantidad)
+		{
+			//Eliminar detalle pedido
+			Tablas.Detalle_pedido Aux = new Tablas.Detalle_pedido();
+			int comprobar = 0;
+			foreach (var item in Datos.Compras)
+            {
+                if (item.Cantidad == cantidad && item.Cod_pizza == cod_pizza && comprobar == 0)
+                {
+					comprobar = 1;
+					Aux = item;
                 }
             }
-			ViewData["Total"] = Datos.Total;
-        }
+			Datos.Compras.Remove(Aux);
+			return RedirectToAction("Detalle_pedido");
+		}
+
 		public HomeController(ILogger<HomeController> logger)
 		{
 			_logger = logger;
 		}
 		public ActionResult Agregar(String cod_pizza, String cantidad)
         {
-			Tablas.Detalle_pedido detalle_pedido = new Tablas.Detalle_pedido(Datos.Compras.Count, 1, Convert.ToInt32(cod_pizza), Convert.ToInt32(cantidad));
+			List<Tablas.Detalle_pedido> aux2 = new List<Tablas.Detalle_pedido>();
+			Tablas.Detalle_pedido detalle_pedido = new Tablas.Detalle_pedido(1, 1, Convert.ToInt32(cod_pizza), Convert.ToInt32(cantidad));
 			Datos.Compras.Add(detalle_pedido);
 			Calcular_Total();
 			string aux = Datos.Total.ToString();
             if (aux.Contains('.'))
             {
+                if (Datos.Total == 0)
+                {
+					aux = "0.00";
+                }
             }else
             {
 				aux += ".00";
@@ -116,24 +191,6 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			}
 			return Json(pizza);
 		}
-		[HttpPost]
-		public JsonResult Obtener_detalle(int cod_pizza, string foto, string nombre, int cantidad, double precio)
-		{
-			Database.Reiniciar();
-			List<Detalles_auxiliar.Detalle_pedido2> Lista_aux = new List<Detalles_auxiliar.Detalle_pedido2>();
-            foreach (var item in Datos.Compras)
-            {
-				Database.Reiniciar();
-				SqlCommand consulta = new SqlCommand("Select * from pizza where cod_pizza = '"+item.Cod_pizza+"'", Database.conectar);
-				SqlDataReader Leer = consulta.ExecuteReader();
-				while(Leer.Read())
-                {
-					Lista_aux.Add(new Detalles_auxiliar.Detalle_pedido2(item.Cod_pizza, (string)Leer[3], (string)Leer[1],item.Cantidad,(item.Cantidad*(double)Leer[2])));
-                }
-            }
-			return Json(Lista_aux);
-		}
-
 		public ActionResult Cerrar()
         {
 			Database.Reiniciar();
@@ -150,7 +207,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
                 {
 					TempData.Keep();
 					Database.Reiniciar();
-					SqlCommand consulta = new SqlCommand("Select Pe.cod_pedido as orden, (Case When Pe.tipo_pedido = 1 THEN 'Online' When Pe.tipo_pedido >= 2 THEN 'Tienda' END) as tipo_pedido, TI.nombre as tienda, Pe.direccion, Pe.fecha, Pe.hora, Pe.total,(Case When Pe.estado = 1 THEN 'Preparación' When Pe.estado = 2 THEN 'Entregado' END) as Estado From pedido PE INNER JOIN tienda TI on TI.cod_tienda = PE.cod_tienda WHERE Pe.cod_cliente = '" + TempData["Cod_usuario"] + "' ORDER BY PE.fecha DESC", Database.conectar);
+					SqlCommand consulta = new SqlCommand("Select Pe.cod_pedido as orden, (Case When Pe.tipo_pedido = 1 THEN 'Online' When Pe.tipo_pedido >= 2 THEN 'Tienda' END) as tipo_pedido, TI.nombre as tienda, Pe.direccion, Pe.fecha, Pe.hora, (Select SUM(detalle_pedido.cantidad*pizza.precio) From detalle_pedido INNER JOIN pizza on pizza.cod_pizza = detalle_pedido.cod_pizza where cod_pedido = PE.cod_pedido)as total, (Case When Pe.estado = 1 THEN 'Preparación' When Pe.estado = 2 THEN 'Entregado' END) as Estado From pedido PE INNER JOIN tienda TI on TI.cod_tienda = PE.cod_tienda WHERE Pe.cod_cliente = '" + TempData["Cod_usuario"] + "' ORDER BY PE.fecha DESC", Database.conectar);
 					TempData.Keep();
 					SqlDataReader Leer = consulta.ExecuteReader();
 					List<Detalles_auxiliar.Detalle_pedido> aux = new List<Detalles_auxiliar.Detalle_pedido>();
@@ -201,7 +258,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		public ActionResult InicioSesion(string correo, string contra)
         {
 			Tablas.Cliente usuario = null;
-			Database.Abrir();
+			Database.Reiniciar();
 			SqlCommand consulta = new SqlCommand("Select * From cliente Where correo = '"+correo+"' AND contra = '"+contra+"'", Database.conectar);
 			SqlDataReader Leer = consulta.ExecuteReader();
 			while (Leer.Read())

@@ -157,15 +157,15 @@
                                                                 url: "@Url.Action("Agregar","Home")",
                                                                 data: { cod_pizza: cod_pizza, cantidad: cantidad },
                                                                 type: "POST",
-                                                                success: function (response) {
+                                                                success: function (response)
+                                                                {
                                                                     $("#Txt_cantidad").val(1);
                                                                     $('#Total').text("Q." + response);
-                                                                    $('#Total2').text("Q." + response);
+                                                                    $('#Total2').text("Total Q." + response);
                                                                     $('#pizza').modal('hide');
                                                                 }
                                                             });
                                                         })
-
                                                     });
                                             </script>
                                         </form>

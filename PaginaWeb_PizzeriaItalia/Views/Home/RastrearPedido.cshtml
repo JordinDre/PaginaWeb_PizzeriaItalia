@@ -34,14 +34,14 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>@item.Orden</td>
-                    <td>@item.Tipo_pedido</td>
-                    <td>@item.Tienda</td>
-                    <td>@item.Direccion</td>
-                    <td>@item.Fecha.ToString("dd-MM-yyyy")</td>
-                    <td>@item.Hora</td>
-                    <td>@item.Total</td>
-                    <td>@item.Estado</td>
+                    <td align="center">@item.Orden</td>
+                    <td align="center">@item.Tipo_pedido</td>
+                    <td align="center">@item.Tienda</td>
+                    <td align="center">@item.Direccion</td>
+                    <td align="center">@item.Fecha.ToString("dd-MM-yyyy")</td>
+                    <td align="center">@item.Hora.ToString("hh\\:mm")</td>
+                    <td align="center">@item.Total</td>
+                    <td align="center">@item.Estado</td>
                 </tr>
             }
         </tbody>
