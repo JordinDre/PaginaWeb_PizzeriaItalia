@@ -126,15 +126,9 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			Datos.Compras.Add(detalle_pedido);
 			Calcular_Total();
 			string aux = Datos.Total.ToString();
-            if (aux.Contains('.'))
+            if (Datos.Total%1 == 0)
             {
-                if (Datos.Total == 0)
-                {
-					aux = "0.00";
-                }
-            }else
-            {
-				aux += ".00";
+				aux = aux + ".00";
             }
 			return Content(aux);
 		}
