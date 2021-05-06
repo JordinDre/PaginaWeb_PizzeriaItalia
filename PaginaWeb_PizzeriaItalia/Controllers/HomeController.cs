@@ -209,7 +209,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 					{
                         try
 						{
-							aux.Add(new Detalles_auxiliar.Detalle_pedido((int)Leer[0], (string)Leer[1], (string)Leer[2], (string)Leer[3], (DateTime)Leer[4], (TimeSpan)Leer[5], (double)Leer[6], (string)Leer[7]));
+							aux.Add(new Detalles_auxiliar.Detalle_pedido((int)Leer[0], (string)Leer[1], (string)Leer[2],"", (string)Leer[3], (DateTime)Leer[4], (TimeSpan)Leer[5], (double)Leer[6], (string)Leer[7]));
 						}
 						catch (Exception)
                         {

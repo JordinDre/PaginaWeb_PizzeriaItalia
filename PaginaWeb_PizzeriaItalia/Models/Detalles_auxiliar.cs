@@ -12,17 +12,19 @@ namespace PaginaWeb_PizzeriaItalia.Models
             public int Orden { get; set; }
             public String Tipo_pedido { get; set; }
             public String Tienda { get; set; }
+            public String Cliente { get; set; }
             public String Direccion { get; set; }
             public DateTime Fecha { get; set; }
             public TimeSpan Hora { get; set; }
             public double Total { get; set; }
             public String Estado { get; set; }
             public Detalle_pedido() { }
-            public Detalle_pedido(int _Orden, String _Tipo_pedido, String _Tienda, String _Direccion, DateTime _Fecha, TimeSpan _Hora, double _Total, String _Estado)
+            public Detalle_pedido(int _Orden, String _Tipo_pedido, String _Tienda, String _Cliente, String _Direccion, DateTime _Fecha, TimeSpan _Hora, double _Total, String _Estado)
             {
                 Orden = _Orden;
                 Tipo_pedido = _Tipo_pedido;
                 Tienda = _Tienda;
+                Cliente = _Cliente;
                 Direccion = _Direccion;
                 Fecha = _Fecha;
                 Hora = _Hora;
