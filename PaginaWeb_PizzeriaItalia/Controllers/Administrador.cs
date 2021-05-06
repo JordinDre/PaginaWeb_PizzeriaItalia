@@ -196,6 +196,26 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			return View(aux);
 
 		}
+		public ActionResult Modificar_pedido(int cod_pedido, String tipo)
+		{
+			int _tipo = 0;
+            switch (tipo)
+            {
+                case "Preparación":
+					_tipo = 1;
+                    break;
+                case "Enviado":
+					_tipo = 2;
+                    break;
+                case "Entregado":
+					_tipo = 3;
+					break;
+            }
+            Database.Reiniciar();
+			SqlCommand consulta = new SqlCommand("UPDATE pedido SET estado = '"+_tipo+"' WHERE cod_pedido = '"+cod_pedido+"'; ", Database.conectar);
+			consulta.ExecuteNonQuery();
+			return Content("a");
+		}
 
 		public ActionResult pizza()
 		{

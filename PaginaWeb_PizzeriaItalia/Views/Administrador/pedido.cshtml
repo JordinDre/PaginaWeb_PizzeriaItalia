@@ -3,6 +3,7 @@
     ViewData["Title"] = "Pedidos";
     TempData.Keep();
     int i = 0;
+    string aux = "";
 }
 <!doctype html>
 <html lang="en">
@@ -52,7 +53,8 @@
                     <td>@item.Hora.ToString("hh\\:mm")</td>
                     <td>@item.Total</td>
                     <td>
-                        <select class="browser-default custom-select" id="Box_estado+@i">
+                        @{aux = "Box_estado"+i;}
+                        <select class="browser-default custom-select" id="@aux">
                             @switch (item.Estado)
                             {
                                 case "Preparación":
@@ -73,12 +75,18 @@
                             }
                         </select>
                         <script>
-                            $('#Box_estado+@i').on('change', function (e) {
-                                var optionSelected = $(this);
+                            $('#@aux').on('change', function (e) {
+                                var optionSelected = $(this).find("option:selected");
                                 var valueSelected = optionSelected.val();
-                                var textSelected = $(e.target).find("option:selected").text(); 
-                                console.log(textSelected);
-                                console.log(valueSelected);
+                                var textSelected = optionSelected.text();
+
+                                var url = "@Url.Action("Modificar_pedido","Administrador")";
+                                var x = textSelected;
+                                var y = @item.Orden;
+                                var data = { cod_pedido: y , tipo : x};
+                                $.post(url, data).done(function (data) {
+                                    console.log(data);
+                                });
                             });
                         </script>
                     </td>
