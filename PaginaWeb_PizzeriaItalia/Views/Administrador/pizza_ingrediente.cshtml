@@ -1,4 +1,4 @@
-﻿@model List<Tablas.Pizza_ingrediente>
+﻿@model List<Admin_aux.Pizza_Ingredientes>
 @{
 	ViewData["Title"] = "Ingredientes de Pizza";
 }
@@ -20,21 +20,107 @@
 	<table class="table caption-top">
 		<thead class="table-dark">
 			<tr>
-				<th scope="col">Codigo de Pizza</th>
-				<th scope="col">Codigo de Ingrediente</th>
+				<th scope="col">Pizza</th>
+				<th scope="col">Ingrediente</th>
 				<th scope="col">Cantidad</th>
 				<th scope="col">Opciones</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
-				<form method="post" action="/Administrador/bodega">
-					<td>
-						<input name="Codigo_Pizza" type="number" min="0" required />
-					</td>
-					<td>
-						<input name="Codigo_Ingrediente" type="number" min="0" required />
-					</td>
+				<form method="post" action="/Administrador/pizza_ingrediente">
+                    <td>
+                        <input name="Codigo_Pizza" id="Codigo_Pizza" hidden required />
+                        <select class="mdb-select md-form" id="Box_Pizza">
+                        </select>
+                        <script>
+							$('#Box_Pizza').ready(function () {
+								var url = "@Url.Action("Obtener_pizza","Administrador")";
+                                var x = "";
+                                var data = { nombre: x};
+								$.post(url, data).done(function (data)
+								{
+									$("#Box_Pizza").empty();
+                                    console.log(data);
+									$.each(data, function (i, item)
+									{
+										console.log(i);
+										if (i == 0)
+										{
+                                            $("#Codigo_Pizza").val(item);
+                                            $("#Box_Pizza").append("<option selected value='" + i + "'>" + item + "</option>")
+										} else
+										{
+                                            $("#Box_Pizza").append("<option value='" + i + "'>" + item + "</option>")
+                                        }
+                                    });
+                                });
+                            });
+                            $('#Box_Pizza').on('change', function (e) {
+                                var optionSelected = $(this).find("option:selected");
+                                var valueSelected = optionSelected.val();
+                                var textSelected = optionSelected.text();
+                                $("#Codigo_Pizza").val(textSelected);
+								var url = "@Url.Action("Obtener_pizza_ingrediente", "Administrador")";
+                                var x = "";
+                                var y = textSelected;
+                                var data = {cod_pizza:y , nombre: x};
+								$.post(url, data).done(function (data)
+								{
+									$("#Box_Ingrediente").empty();
+                                    console.log(data);
+									$.each(data, function (i, item)
+									{
+										console.log(i);
+										if (i == 0)
+										{
+                                            $("#Codigo_Ingrediente").val(item);
+                                            $("#Box_Ingrediente").append("<option selected value='" + i + "'>" + item + "</option>")
+										} else
+										{
+                                            $("#Box_Ingrediente").append("<option value='" + i + "'>" + item + "</option>")
+                                        }
+                                    });
+                                });
+                            });
+                        </script>
+                    </td>
+                    <td>
+                        <input name="Codigo_Ingrediente" id="Codigo_Ingrediente" hidden required />
+                        <select class="mdb-select md-form" id="Box_Ingrediente">
+                        </select>
+                        <script>
+							$('#Box_Ingrediente').ready(function () {
+								var url = "@Url.Action("Obtener_pizza_ingrediente", "Administrador")";
+                                var x = "";
+                                var y = "napolitana";
+                                var data = {cod_pizza:y , nombre: x};
+								$.post(url, data).done(function (data)
+								{
+									$("#Box_Ingrediente").empty();
+                                    console.log(data);
+									$.each(data, function (i, item)
+									{
+										console.log(i);
+										if (i == 0)
+										{
+                                            $("#Codigo_Ingrediente").val(item);
+                                            $("#Box_Ingrediente").append("<option selected value='" + i + "'>" + item + "</option>")
+										} else
+										{
+                                            $("#Box_Ingrediente").append("<option value='" + i + "'>" + item + "</option>")
+                                        }
+                                    });
+                                });
+                            });
+                            $('#Box_Ingrediente').on('change', function (e) {
+                                var optionSelected = $(this).find("option:selected");
+                                var valueSelected = optionSelected.val();
+                                var textSelected = optionSelected.text();
+                                $("#Codigo_Ingrediente").val(textSelected);
+                            });
+                        </script>
+                    </td>
 					<td>
 						<input name="Cantidad" type="number" min="0" required />
 					</td>
@@ -49,9 +135,9 @@
 	<table class="table caption-top">
 		<thead class="table-dark">
 			<tr>
-				<th scope="col">Codigo Pizza ingrediente</th>
-				<th scope="col">Codigo de Pizza</th>
-				<th scope="col">Codigo de Ingrediente</th>
+				<th scope="col">Registro</th>
+				<th scope="col">Pizza</th>
+				<th scope="col">Ingrediente</th>
 				<th scope="col">Cantidad</th>
 			</tr>
 		</thead>
@@ -59,9 +145,9 @@
 			@foreach (var item in Model)
 			{
 				<tr>
-					<td>@item.Cod_pizza_ingrediente</td>
-					<td>@item.Cod_pizza</td>
-					<td>@item.Cod_ingrediente</td>
+					<td>@item.Registro</td>
+					<td>@item.Nombre</td>
+					<td>@item.Ingrediente</td>
 					<td>@item.Cantidad</td>
 				</tr>
 			}

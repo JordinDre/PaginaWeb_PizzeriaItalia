@@ -41,5 +41,24 @@ namespace PaginaWeb_PizzeriaItalia.Models
                 Cantidad = _Cantidad;
             }
         }
+        public class Pizza_Ingredientes
+        {
+            public int Registro { get; set; }
+            public int Cod_pizza { get; set; }
+            public String Nombre { get; set; }
+            public int Cod_ingrediente { get; set; }
+            public String Ingrediente { get; set; }
+            public int Cantidad { get; set; }
+            public Pizza_Ingredientes() { }
+            public Pizza_Ingredientes(int _Registro, int _Cod_pizza, String _Nombre, int _Cod_ingrediente, String _Ingrediente, int _Cantidad)
+            {
+                Registro = _Registro;
+                Cod_pizza = _Cod_pizza;
+                Nombre = _Nombre;
+                Cod_ingrediente = _Cod_ingrediente;
+                Ingrediente = _Ingrediente;
+                Cantidad = _Cantidad;
+            }
+        }
     }
 }

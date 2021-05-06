@@ -314,12 +314,12 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		public ActionResult pizza_ingrediente()
 		{
 			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("Select * from pizza_ingrediente", Database.conectar);
+			SqlCommand consulta = new SqlCommand("Select BI.cod_pizza_ingrediente as registro, Bi.cod_pizza, B.nombre, BI.cod_ingrediente, I.nombre as ingrediente, BI.cantidad From pizza_ingrediente BI INNER JOIN pizza B on B.cod_pizza = BI.cod_pizza INNER JOIN ingrediente I on I.cod_ingrediente = BI.cod_ingrediente", Database.conectar);
 			SqlDataReader Leer = consulta.ExecuteReader();
-			List<Tablas.Pizza_ingrediente> aux = new List<Tablas.Pizza_ingrediente>();
+			List<Admin_aux.Pizza_Ingredientes> aux = new List<Admin_aux.Pizza_Ingredientes>();
 			while (Leer.Read())
 			{
-				aux.Add(new Tablas.Pizza_ingrediente((int)Leer[0], (int)Leer[1], (int)Leer[2], (int)Leer[3]));
+				aux.Add(new Admin_aux.Pizza_Ingredientes((int)Leer[0], (int)Leer[1], (string)Leer[2], (int)Leer[3], (string)Leer[4], (int)Leer[5]));
 			}
 			return View(aux);
 		}
@@ -331,16 +331,41 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			SqlCommand consulta = new SqlCommand("insert into bodega_ingrediente(cod_bodega,cod_ingrediente,cantidad) values ('" + Codigo_Pizza + "', '" + Codigo_Ingrediente + "', '" + Cantidad + "')", Database.conectar);
 			consulta.ExecuteNonQuery();
 			Database.Reiniciar();
-			consulta = new SqlCommand("Select * from pizza_ingrediente", Database.conectar);
+			consulta = new SqlCommand("Select BI.cod_pizza_ingrediente as registro, Bi.cod_pizza, B.nombre, BI.cod_ingrediente, I.nombre as ingrediente, BI.cantidad From pizza_ingrediente BI INNER JOIN pizza B on B.cod_pizza = BI.cod_pizza INNER JOIN ingrediente I on I.cod_ingrediente = BI.cod_ingrediente", Database.conectar);
 			SqlDataReader Leer = consulta.ExecuteReader();
-			List<Tablas.Pizza_ingrediente> aux = new List<Tablas.Pizza_ingrediente>();
+			List<Admin_aux.Pizza_Ingredientes> aux = new List<Admin_aux.Pizza_Ingredientes>();
 			while (Leer.Read())
 			{
-				aux.Add(new Tablas.Pizza_ingrediente((int)Leer[0], (int)Leer[1], (int)Leer[2], (int)Leer[3]));
+				aux.Add(new Admin_aux.Pizza_Ingredientes((int)Leer[0], (int)Leer[1], (string)Leer[2], (int)Leer[3], (string)Leer[4], (int)Leer[5]));
 			}
 			return View(aux);
 		}
-
+		[HttpPost]
+		public JsonResult Obtener_pizza(string nombre)
+		{
+			Database.Reiniciar();
+			SqlCommand consulta = new SqlCommand("Select * from pizza", Database.conectar);
+			SqlDataReader Leer = consulta.ExecuteReader();
+			List<string> aux = new List<string>();
+			while (Leer.Read())
+			{
+				aux.Add((String)Leer[1]);
+			}
+			return Json(aux);
+		}
+		[HttpPost]
+		public JsonResult Obtener_pizza_ingrediente(string cod_pizza, string nombre)
+		{
+			Database.Reiniciar();
+			SqlCommand consulta = new SqlCommand("Select * from ingrediente where cod_ingrediente NOT IN(Select BI.cod_ingrediente From pizza_ingrediente BI INNER JOIN ingrediente I on I.cod_ingrediente = Bi.cod_ingrediente INNER JOIN pizza B on B.cod_pizza = BI.cod_pizza Where B.nombre = '"+cod_pizza+"')", Database.conectar);
+			SqlDataReader Leer = consulta.ExecuteReader();
+			List<string> aux = new List<string>();
+			while (Leer.Read())
+			{
+				aux.Add((String)Leer[1]);
+			}
+			return Json(aux);
+		}
 
 		public ActionResult tienda()
 		{
