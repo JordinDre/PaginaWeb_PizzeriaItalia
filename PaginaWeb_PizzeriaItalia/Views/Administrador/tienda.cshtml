@@ -1,7 +1,6 @@
-﻿@*
-	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model List<Tablas.Tienda>
 @{
+	ViewData["Title"] = "Tienda";
 }
 <!doctype html>
 <html lang="en">
@@ -21,6 +20,39 @@
 	<table class="table caption-top">
 		<thead class="table-dark">
 			<tr>
+				<th scope="col">Nombre</th>
+				<th scope="col">Direccion</th>
+				<th scope="col">Ciudad</th>
+				<th scope="col">URL de la Foto</th>
+				<th scope="col">Opciones</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<form method="post" action="/Administrador/tienda">
+					<td>
+						<input name="Nombre" type="text" required />
+					</td>
+					<td>
+						<input name="Direccion" type="text" required/>
+					</td>
+					<td>
+						<input name="Ciudad" type="text" required />
+					</td>
+					<td>
+						<input name="Foto" type="text" required />
+					</td>
+					<td>
+						<button type='submit' style='max-width: 100%; width: 100%; height: 100%' class="btn btn-info">Agregar</button>
+					</td>
+				</form>
+			</tr>
+		</tbody>
+	</table>
+
+	<table class="table caption-top">
+		<thead class="table-dark">
+			<tr>
 				<th scope="col">Codigo Tienda</th>
 				<th scope="col">Nombre</th>
 				<th scope="col">Direccion</th>
@@ -29,12 +61,17 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr>
-				<td>UNO</td>
-				<td>DOS</td>
-				<td>TRES</td>
-				<td>Cuatro</td>
-			</tr>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td>@item.Cod_tienda</td>
+					<td>@item.Nombre</td>
+					<td>@item.Direccion</td>
+					<td>@item.Ciudad</td>
+					<td>@item.Foto</td>
+				</tr>
+			}
+
 		</tbody>
 	</table>
 </body>
