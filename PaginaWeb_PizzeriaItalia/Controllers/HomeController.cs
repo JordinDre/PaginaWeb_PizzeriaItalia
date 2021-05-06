@@ -14,7 +14,27 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
-
+		public bool Comprobar_Usuario()
+		{
+			if (TempData["Tipo"] is null)
+			{
+				return false;
+			}
+			else
+			{
+				TempData.Keep();
+				if (TempData["Tipo"].ToString().Equals("0"))
+				{
+					TempData.Keep();
+					return true;
+				}
+				else
+				{
+					TempData.Keep();
+					return false;
+				}
+			}
+		}
 		public void Quitar_usuario()
 		{
 			TempData["Cod_usuario"] = null;

@@ -11,26 +11,50 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 {
 	public class Administrador : Controller
 	{
-		// GET: Administrador
+		public bool Comprobar_Usuario()
+        {
+			if (TempData["Tipo"] is null)
+			{
+				return false;
+            }
+            else
+            {
+				TempData.Keep();
+				if (TempData["Tipo"].ToString().Equals("0"))
+				{
+					TempData.Keep();
+					return true;
+				}
+				else
+				{
+					TempData.Keep();
+					return false;
+				}
+			}
+        }
 		public ActionResult Admin()
 		{
-			return View();
+			bool Comprobar = Comprobar_Usuario();
+            if (Comprobar)
+            {
+				return RedirectToAction("pedido", "Administrador");
+			}
+			else
+            {
+				return RedirectToAction("InicioSesion", "Home");
+			}
 		}
-
-		// GET: Administrador/Details/5
-		public ActionResult Details(int id)
-		{
-			return View();
-		}
-
-		// GET: Administrador/Create
-		public ActionResult Create()
-		{
-			return View();
-		}
-
 		public ActionResult cliente()
 		{
+			bool Comprobar = Comprobar_Usuario();
+			if (Comprobar)
+			{
+				
+			}
+			else
+			{
+				return RedirectToAction("InicioSesion", "Home");
+			}
 			String _consulta = "Select * from cliente";
 			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			List<Tablas.Cliente> aux = new List<Tablas.Cliente>();
@@ -60,6 +84,15 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 
 		public ActionResult bodega()
 		{
+			bool Comprobar = Comprobar_Usuario();
+			if (Comprobar)
+			{
+
+			}
+			else
+			{
+				return RedirectToAction("InicioSesion", "Home");
+			}
 			String _consulta = "Select Bo.cod_bodega, Bo.nombre,TI.cod_tienda,Ti.nombre from bodega BO INNER JOIN Tienda TI on TI.cod_tienda = Bo.cod_tienda";
 			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			List<Admin_aux.Bodega> aux = new List<Admin_aux.Bodega>();
@@ -107,6 +140,15 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 
 		public ActionResult bodega_ingrediente()
 		{
+			bool Comprobar = Comprobar_Usuario();
+			if (Comprobar)
+			{
+
+			}
+			else
+			{
+				return RedirectToAction("InicioSesion", "Home");
+			}
 			string _consulta = "Select BI.cod_bodega_ingrediente as registro, Bi.cod_bodega, B.nombre, BI.cod_ingrediente, I.nombre as ingrediente, BI.cantidad From bodega_ingrediente BI INNER JOIN Bodega B on B.cod_bodega = BI.cod_bodega INNER JOIN ingrediente I on I.cod_ingrediente = BI.cod_ingrediente ";
 			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			List<Admin_aux.Bodega_Ingredientes> aux = new List<Admin_aux.Bodega_Ingredientes>();
@@ -175,6 +217,15 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 
 		public ActionResult detalle_pedido()
 		{
+			bool Comprobar = Comprobar_Usuario();
+			if (Comprobar)
+			{
+
+			}
+			else
+			{
+				return RedirectToAction("InicioSesion", "Home");
+			}
 			return RedirectToAction("pedido", "Administrador");
 		}
 		[HttpPost]
@@ -199,7 +250,15 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 
 		public ActionResult ingrediente()
 		{
-			 
+			bool Comprobar = Comprobar_Usuario();
+			if (Comprobar)
+			{
+
+			}
+			else
+			{
+				return RedirectToAction("InicioSesion", "Home");
+			}
 			string _consulta = "Select * from ingrediente";
 			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			List<Tablas.Ingrediente> aux = new List<Tablas.Ingrediente>();
@@ -228,6 +287,15 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 
 		public ActionResult pedido()
 		{
+			bool Comprobar = Comprobar_Usuario();
+			if (Comprobar)
+			{
+
+			}
+			else
+			{
+				return RedirectToAction("InicioSesion", "Home");
+			}
 			string _consulta = "Select Pe.cod_pedido as orden, (Case When Pe.tipo_pedido = 1 THEN 'Online' When Pe.tipo_pedido >= 2 THEN 'Tienda' END) as tipo_pedido, TI.nombre as tienda, CL.nombre as cliente, Pe.direccion, Pe.fecha, Pe.hora, (Select SUM(detalle_pedido.cantidad * pizza.precio) From detalle_pedido INNER JOIN pizza on pizza.cod_pizza = detalle_pedido.cod_pizza where cod_pedido = PE.cod_pedido) as total, (Case When Pe.estado = 1 THEN 'Preparación' When Pe.estado = 2 THEN 'Enviado' When Pe.estado = 3 THEN 'Entregado' END) as Estado From pedido PE INNER JOIN tienda TI on TI.cod_tienda = PE.cod_tienda INNER JOIN cliente CL on Cl.cod_cliente = Pe.cod_cliente Order by Pe.cod_pedido DESC";
 			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			List<Detalles_auxiliar.Detalle_pedido> aux = new List<Detalles_auxiliar.Detalle_pedido>();
@@ -269,6 +337,15 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 
 		public ActionResult pizza()
 		{
+			bool Comprobar = Comprobar_Usuario();
+			if (Comprobar)
+			{
+
+			}
+			else
+			{
+				return RedirectToAction("InicioSesion", "Home");
+			}
 			string _consulta = "Select * from pizza";
 			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			List<Tablas.Pizza> aux = new List<Tablas.Pizza>();
@@ -297,6 +374,15 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 
 		public ActionResult pizza_ingrediente()
 		{
+			bool Comprobar = Comprobar_Usuario();
+			if (Comprobar)
+			{
+
+			}
+			else
+			{
+				return RedirectToAction("InicioSesion", "Home");
+			}
 			string _consulta = "Select BI.cod_pizza_ingrediente as registro, Bi.cod_pizza, B.nombre, BI.cod_ingrediente, I.nombre as ingrediente, BI.cantidad From pizza_ingrediente BI INNER JOIN pizza B on B.cod_pizza = BI.cod_pizza INNER JOIN ingrediente I on I.cod_ingrediente = BI.cod_ingrediente";
 			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			List<Admin_aux.Pizza_Ingredientes> aux = new List<Admin_aux.Pizza_Ingredientes>();
@@ -353,6 +439,15 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 
 		public ActionResult tienda()
 		{
+			bool Comprobar = Comprobar_Usuario();
+			if (Comprobar)
+			{
+
+			}
+			else
+			{
+				return RedirectToAction("InicioSesion", "Home");
+			}
 			string _consulta = "Select * from tienda";
 			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 

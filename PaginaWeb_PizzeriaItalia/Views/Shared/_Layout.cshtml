@@ -113,13 +113,19 @@
                     {
                         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
                             <div class="container">
-                                <a class="navbar-brand" asp-area="" asp-controller="Administrador" asp-action="Admin">@TempData["Nombre"]</a>
+                                <a class="navbar-brand" asp-area="" asp-controller="Administrador" asp-action="Admin"></a>
                                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                                         aria-expanded="false" aria-label="Toggle navigation">
                                     <span class="navbar-toggler-icon"></span>
                                 </button>
                                 <div class="container navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                                     <ul class="navbar-nav flex-grow-1">
+                                        <li class="nav-item">
+                                            <a class="nav-link text-dark btn btn-outline-light " asp-area="" asp-controller="Administrador" asp-action="pedido">Pedido</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link text-dark btn btn-outline-light " asp-area="" asp-controller="Administrador" asp-action="tienda">Tienda</a>
+                                        </li>
                                         <li class="nav-item">
                                             <a class="nav-link text-dark btn btn-outline-light " asp-area="" asp-controller="Administrador" asp-action="cliente">Cliente</a>
                                         </li>
@@ -130,9 +136,6 @@
                                             <a class="nav-link text-dark btn btn-outline-light " asp-area="" asp-controller="Administrador" asp-action="bodega_ingrediente">Manejo de Bodega</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a class="nav-link text-dark btn btn-outline-light " asp-area="" asp-controller="Administrador" asp-action="pedido">Pedido</a>
-                                        </li>
-                                        <li class="nav-item">
                                             <a class="nav-link text-dark btn btn-outline-light " asp-area="" asp-controller="Administrador" asp-action="ingrediente">Ingredientes</a>
                                         </li>
                                         <li class="nav-item">
@@ -140,9 +143,6 @@
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link text-dark btn btn-outline-light " asp-area="" asp-controller="Administrador" asp-action="pizza_ingrediente">Ingredientes de Pizza</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link text-dark btn btn-outline-light " asp-area="" asp-controller="Administrador" asp-action="tienda">Tienda</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link text-dark btn btn-outline-light" asp-area="" asp-controller="Home" asp-action="Cerrar">Cerrar Sesion</a>
