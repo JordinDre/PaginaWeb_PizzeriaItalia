@@ -25,15 +25,15 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		}
 		public void Calcular_Total()
 		{
+			string _consulta = "";
 			Datos.Total = 0;
 			List<Tablas.Detalle_pedido> aux2 = new List<Tablas.Detalle_pedido>();
 			foreach (var item in Datos.Compras)
 			{
 				try
-				{
-					Database.Reiniciar();
-					SqlCommand consulta = new SqlCommand("Select * from pizza where cod_pizza = '" + item.Cod_pizza + "'", Database.conectar);
-					SqlDataReader Leer = consulta.ExecuteReader();
+				{	
+					_consulta ="Select * from pizza where cod_pizza = '" + item.Cod_pizza + "'";
+					SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 					while (Leer.Read())
 					{
 						Datos.Total += Convert.ToDouble(Leer["Precio"]) * item.Cantidad;
@@ -48,15 +48,14 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		}
 		public ActionResult Detalle_pedido()
 		{
-			Database.Reiniciar();
+			string _consulta = "";
 			List<Detalles_auxiliar.Detalle_pedido2> Lista_aux = new List<Detalles_auxiliar.Detalle_pedido2>();
 			if (Datos.Compras.Count > 0)
 			{
 				foreach (var item in Datos.Compras)
-				{
-					Database.Reiniciar();
-					SqlCommand consulta = new SqlCommand("Select * from pizza where cod_pizza = '" + item.Cod_pizza + "'", Database.conectar);
-					SqlDataReader Leer = consulta.ExecuteReader();
+				{	
+					_consulta ="Select * from pizza where cod_pizza = '" + item.Cod_pizza + "'";
+					SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 					while (Leer.Read())
 					{
 						Lista_aux.Add(new Detalles_auxiliar.Detalle_pedido2(item.Cod_pizza, (string)Leer[3], (string)Leer[1], item.Cantidad, (double)Leer[2]));
@@ -72,27 +71,27 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		[HttpPost]
 		public ActionResult Detalle_pedido(string direccion, double total)
         {
+			string _consulta = "";
 			//Hacer pedido actualizar para colocar tienda
 			int cod_pedido = 0;
 			DateTime fecha = DateTime.Now;
 			TimeSpan hora = DateTime.Now.TimeOfDay;
-			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("Insert into pedido(tipo_pedido,cod_tienda,cod_cliente,direccion,fecha,hora,total,estado) values('1', '1', '"+TempData["Cod_usuario"]+"', '"+direccion+"', '"+fecha+"', '"+hora+"','"+total+"', '1')", Database.conectar);
+			
+			_consulta ="Insert into pedido(tipo_pedido,cod_tienda,cod_cliente,direccion,fecha,hora,total,estado) values('1', '1', '"+TempData["Cod_usuario"]+"', '"+direccion+"', '"+fecha+"', '"+hora+"','"+total+"', '1')";
 			TempData.Keep();
-			consulta.ExecuteNonQuery();
-			Database.Reiniciar();
-			consulta = new SqlCommand("Select * from pedido Where cod_cliente = '"+TempData["Cod_usuario"]+ "' and fecha = '"+fecha+ "' and hora = '"+hora+ "' and total = '"+total+"'", Database.conectar);
+			Database.Consulta_Non(_consulta);
+			
+			_consulta = "Select * from pedido Where cod_cliente = '"+TempData["Cod_usuario"]+ "' and fecha = '"+fecha+ "' and hora = '"+hora+ "' and total = '"+total+"'";
 			TempData.Keep();
-			SqlDataReader Leer = consulta.ExecuteReader();
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			while (Leer.Read())
             {
 				cod_pedido = (int)Leer[0];
             }
             foreach (var item in Datos.Compras)
             {
-				Database.Reiniciar();
-				consulta = new SqlCommand("insert into detalle_pedido(cod_pedido,cod_pizza,cantidad) values('"+cod_pedido+"', '"+item.Cod_pizza+"', '"+item.Cantidad+"')", Database.conectar);
-				consulta.ExecuteNonQuery();
+				_consulta = "insert into detalle_pedido(cod_pedido,cod_pizza,cantidad) values('"+cod_pedido+"', '"+item.Cod_pizza+"', '"+item.Cantidad+"')";
+				Database.Consulta_Non(_consulta);
             }
 			Datos.Compras.Clear();
 			return RedirectToAction("RastrearPedido");
@@ -135,12 +134,13 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 
 		public ActionResult Obtener_total()
         {
-			Database.Reiniciar();
+			
 			Calcular_Total();
 			return Content(Datos.Total.ToString());
 		}
 		public IActionResult Index()
 		{
+			string _consulta = "";
 			if (TempData["Nombre"] is null)
 			{
 				return RedirectToAction("InicioSesion");
@@ -149,9 +149,9 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			{
 				TempData.Keep();
 				Datos.Pizzas.Clear();
-				Database.Reiniciar();
-				SqlCommand consulta = new SqlCommand("Select * from pizza", Database.conectar);
-				SqlDataReader Leer = consulta.ExecuteReader();
+				
+				_consulta ="Select * from pizza";
+				SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 				while (Leer.Read())
 				{
 					String url = (string)Leer[3];
@@ -168,10 +168,11 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		[HttpPost]
 		public JsonResult Obtener_pizza(int cod_pizza, string nombre, string precio, string foto)
 		{
+			string _consulta = "";
 			Tablas.Pizza pizza = new Tablas.Pizza();
-			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("Select * from pizza where cod_pizza = '" + cod_pizza + "'", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
+			_consulta ="Select * from pizza where cod_pizza = '" + cod_pizza + "'";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
+			
 			while (Leer.Read())
 			{
 				pizza.Cod_pizza = (int)Leer[0];
@@ -187,23 +188,22 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		}
 		public ActionResult Cerrar()
         {
-			Database.Reiniciar();
 			Quitar_usuario();
 			return RedirectToAction("InicioSesion");
         }
 		public IActionResult RastrearPedido()
 		{
-			Database.Reiniciar();
-            if (TempData["Cod_usuario"] != null)
+			string _consulta = "";
+			if (TempData["Cod_usuario"] != null)
             {
 				TempData.Keep();
                 if (TempData["Tipo"].ToString().Equals("1"))
                 {
 					TempData.Keep();
-					Database.Reiniciar();
-					SqlCommand consulta = new SqlCommand("Select Pe.cod_pedido as orden, (Case When Pe.tipo_pedido = 1 THEN 'Online' When Pe.tipo_pedido >= 2 THEN 'Tienda' END) as tipo_pedido, TI.nombre as tienda, Pe.direccion, Pe.fecha, Pe.hora, (Select SUM(detalle_pedido.cantidad*pizza.precio) From detalle_pedido INNER JOIN pizza on pizza.cod_pizza = detalle_pedido.cod_pizza where cod_pedido = PE.cod_pedido)as total, (Case When Pe.estado = 1 THEN 'Preparación' When Pe.estado = 2 THEN 'Enviado' When Pe.estado = 3 THEN 'Entregado' END) as Estado From pedido PE INNER JOIN tienda TI on TI.cod_tienda = PE.cod_tienda WHERE Pe.cod_cliente = '" + TempData["Cod_usuario"] + "' ORDER BY PE.fecha DESC", Database.conectar);
+					_consulta ="Select Pe.cod_pedido as orden, (Case When Pe.tipo_pedido = 1 THEN 'Online' When Pe.tipo_pedido >= 2 THEN 'Tienda' END) as tipo_pedido, TI.nombre as tienda, Pe.direccion, Pe.fecha, Pe.hora, (Select SUM(detalle_pedido.cantidad*pizza.precio) From detalle_pedido INNER JOIN pizza on pizza.cod_pizza = detalle_pedido.cod_pizza where cod_pedido = PE.cod_pedido)as total, (Case When Pe.estado = 1 THEN 'Preparación' When Pe.estado = 2 THEN 'Enviado' When Pe.estado = 3 THEN 'Entregado' END) as Estado From pedido PE INNER JOIN tienda TI on TI.cod_tienda = PE.cod_tienda WHERE Pe.cod_cliente = '" + TempData["Cod_usuario"] + "' ORDER BY PE.fecha DESC";
 					TempData.Keep();
-					SqlDataReader Leer = consulta.ExecuteReader();
+					SqlDataReader Leer = Database.Consulta_Reader(_consulta);
+					
 					List<Detalles_auxiliar.Detalle_pedido> aux = new List<Detalles_auxiliar.Detalle_pedido>();
 					while (Leer.Read())
 					{
@@ -251,10 +251,11 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		[HttpPost]
 		public ActionResult InicioSesion(string correo, string contra)
         {
+			string _consulta = "";
 			Tablas.Cliente usuario = null;
-			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("Select * From cliente Where correo = '"+correo+"' AND contra = '"+contra+"'", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
+			_consulta ="Select * From cliente Where correo = '"+correo+"' AND contra = '"+contra+"'";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
+			
 			while (Leer.Read())
             {
 				usuario = new Tablas.Cliente((int)Leer[0], (int)Leer[1], (string)Leer[2], (string)Leer[3], (string)Leer[4], (string)Leer[5]);
@@ -286,21 +287,22 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		public ActionResult Registrarse(String nombre, String telefono, String correo, String contra)
         {
 			int aux = 0;
-			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("Select * From cliente Where correo = '" + correo + "'", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
+			string _consulta = "";
+			_consulta ="Select * From cliente Where correo = '" + correo + "'";
+			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
+			
 			while (Leer.Read())
 			{
 				aux++;
 			}
             if (aux==0)
             {
-				Database.Reiniciar();
-				consulta = new SqlCommand("Insert into cliente(tipo, nombre, telefono, correo, contra) Values('1','" + nombre + "','" + telefono + "','" + correo + "','" + contra + "')", Database.conectar);
-				consulta.ExecuteNonQuery();
-				Database.Reiniciar();
-				consulta = new SqlCommand("Select * From cliente Where correo = '" + correo + "'", Database.conectar);
-				Leer = consulta.ExecuteReader();
+				
+				_consulta = "Insert into cliente(tipo, nombre, telefono, correo, contra) Values('1','" + nombre + "','" + telefono + "','" + correo + "','" + contra + "')";
+				Database.Consulta_Non(_consulta);
+				
+				_consulta = "Select * From cliente Where correo = '" + correo + "'";
+				Leer = Database.Consulta_Reader(_consulta);
 				while (Leer.Read())
 				{
 					TempData["Cod_usuario"] = (int)Leer[0];
