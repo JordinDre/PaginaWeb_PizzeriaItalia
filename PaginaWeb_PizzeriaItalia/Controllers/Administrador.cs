@@ -296,7 +296,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			{
 				return RedirectToAction("InicioSesion", "Home");
 			}
-			string _consulta = "Select Pe.cod_pedido as orden, (Case When Pe.tipo_pedido = 1 THEN 'Online' When Pe.tipo_pedido >= 2 THEN 'Tienda' END) as tipo_pedido, TI.nombre as tienda, CL.nombre as cliente, Pe.direccion, Pe.fecha, Pe.hora, (Select SUM(detalle_pedido.cantidad * pizza.precio) From detalle_pedido INNER JOIN pizza on pizza.cod_pizza = detalle_pedido.cod_pizza where cod_pedido = PE.cod_pedido) as total, (Case When Pe.estado = 1 THEN 'Preparación' When Pe.estado = 2 THEN 'Enviado' When Pe.estado = 3 THEN 'Entregado' END) as Estado From pedido PE INNER JOIN tienda TI on TI.cod_tienda = PE.cod_tienda INNER JOIN cliente CL on Cl.cod_cliente = Pe.cod_cliente Order by Pe.cod_pedido DESC";
+			string _consulta = "Select Pe.cod_pedido as orden, (Case When Pe.tipo_pedido = 1 THEN 'Online' When Pe.tipo_pedido >= 2 THEN 'Tienda' END) as tipo_pedido, TI.nombre as tienda, CL.nombre as cliente, Pe.direccion, Pe.fecha, Pe.hora, (Select SUM(detalle_pedido.cantidad * pizza.precio) From detalle_pedido INNER JOIN pizza on pizza.cod_pizza = detalle_pedido.cod_pizza where cod_pedido = PE.cod_pedido) as total, (Case When Pe.estado = 1 THEN 'Preparación' When Pe.estado = 2 THEN 'Enviado' When Pe.estado = 3 THEN 'Entregado' When Pe.estado = NULL Then 'Preparacion' END) as Estado From pedido PE INNER JOIN tienda TI on TI.cod_tienda = PE.cod_tienda INNER JOIN cliente CL on Cl.cod_cliente = Pe.cod_cliente Order by Pe.cod_pedido DESC";
 			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			List<Detalles_auxiliar.Detalle_pedido> aux = new List<Detalles_auxiliar.Detalle_pedido>();
 			while (Leer.Read())
@@ -318,7 +318,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		public ActionResult Modificar_pedido(int cod_pedido, String tipo)
 		{
 			int _tipo = 0;
-            switch (tipo)
+			switch (tipo)
             {
                 case "Preparación":
 					_tipo = 1;
@@ -328,6 +328,9 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
                     break;
                 case "Entregado":
 					_tipo = 3;
+					break;
+				default:
+					_tipo = 1;
 					break;
             }
 			string _consulta = "UPDATE pedido SET estado = '" + _tipo + "' WHERE cod_pedido = '" + cod_pedido + "'";
