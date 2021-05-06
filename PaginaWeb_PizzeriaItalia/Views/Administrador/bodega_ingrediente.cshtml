@@ -1,4 +1,4 @@
-﻿@model List<Tablas.Bodega_ingrediente>
+﻿@model List<Admin_aux.Bodega_Ingredientes>
 @{
 	ViewData["Title"] = "Ingredientes en Bodega";
 }
@@ -16,58 +16,123 @@
 	<title>Ingredientes en Bodega</title>
 </head>
 <body>
-	<h1>Ingredientes en Bodega</h1>
-	<table class="table caption-top">
-		<thead class="table-dark">
-			<tr>
-				<th scope="col">Codigo de Bodega</th>
-				<th scope="col">Codigo de Ingrediente</th>
-				<th scope="col">Cantidad</th>
-				<th scope="col">Opciones</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<form method="post" action="/Administrador/bodega">
-					<td>
-						<input name="Codigo_Bodega" type="number" min="0" required />
-					</td>
-					<td>
-						<input name="Codigo_Ingrediente" type="number" min="0" required />
-					</td>
-					<td>
-						<input name="Cantidad" type="number" min="0" required />
-					</td>
-					<td>
-						<button type='submit' style='max-width: 100%; width: 100%; height: 100%' class="btn btn-info">Agregar</button>
-					</td>
-				</form>
-			</tr>
-		</tbody>
-	</table>
+    <h1>Ingredientes en Bodega</h1>
+    <caption>Nuevo</caption>
+    <table class="table caption-top">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">Bodega</th>
+                <th scope="col">Ingrediente</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Opciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <form method="post" action="/Administrador/bodega_ingrediente">
+                    <td>
+                        <input name="Codigo_Bodega" id="Codigo_Bodega" hidden required />
+                        <select class="mdb-select md-form" id="Box_Bodega">
+                        </select>
+                        <script>
+							$('#Box_Bodega').ready(function () {
+								var url = "@Url.Action("Obtener_bodega","Administrador")";
+                                var x = "";
+                                var data = { nombre: x};
+								$.post(url, data).done(function (data)
+								{
+									$("#Box_Bodega").empty();
+                                    console.log(data);
+									$.each(data, function (i, item)
+									{
+										console.log(i);
+										if (i == 0)
+										{
+                                            $("#Codigo_Bodega").val(item);
+                                            $("#Box_Bodega").append("<option selected value='" + i + "'>" + item + "</option>")
+										} else
+										{
+                                            $("#Box_Bodega").append("<option value='" + i + "'>" + item + "</option>")
+                                        }
+                                    });
+                                });
+                            });
+                            $('#Box_Bodega').on('change', function (e) {
+                                var optionSelected = $(this).find("option:selected");
+                                var valueSelected = optionSelected.val();
+                                var textSelected = optionSelected.text();
+                                $("#Codigo_Bodega").val(textSelected);
 
-	<table class="table caption-top">
-		<thead class="table-dark">
-			<tr>
-				<th scope="col">Codigo de ingredientes en Bodega</th>
-				<th scope="col">Codigo de Bodega</th>
-				<th scope="col">Codigo de Ingrediente</th>
-				<th scope="col">Cantidad</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var item in Model)
-			{
-			<tr>
-				<td>@item.Cod_bodega_ingrediente</td>
-				<td>@item.Cod_bodega</td>
-				<td>@item.Cod_ingrediente</td>
-				<td>@item.Cantidad</td>
-			</tr>
-			}
+                                var url = "@Url.Action("Obtener_bodega_ingrediente", "Administrador")";
+                                var x = "";
+                                var y = textSelected;
+                                var data = {cod_bodega:y , nombre: x};
+								$.post(url, data).done(function (data)
+								{
+									$("#Box_Ingrediente").empty();
+                                    console.log(data);
+									$.each(data, function (i, item)
+									{
+										console.log(i);
+										if (i == 0)
+										{
+                                            $("#Codigo_Ingrediente").val(item);
+                                            $("#Box_Ingrediente").append("<option selected value='" + i + "'>" + item + "</option>")
+										} else
+										{
+                                            $("#Box_Ingrediente").append("<option value='" + i + "'>" + item + "</option>")
+                                        }
+                                    });
+                                });
+                            });
+                        </script>
+                    </td>
+                    <td>
+                        <input name="Codigo_Ingrediente" id="Codigo_Ingrediente" hidden required />
+                        <select class="mdb-select md-form" id="Box_Ingrediente">
+                        </select>
+                        <script>
+							$('#Box_Ingrediente').on('change', function (e) {
+                                var optionSelected = $(this).find("option:selected");
+                                var valueSelected = optionSelected.val();
+                                var textSelected = optionSelected.text();
+                                $("#Codigo_Ingrediente").val(textSelected);
+                            });
+                        </script>
+                    </td>
+                    <td>
+                        <input name="Cantidad" type="number" min="0" required />
+                    </td>
+                    <td>
+                        <button type='submit' style='max-width: 100%; width: 100%; height: 100%' class="btn btn-info">Agregar</button>
+                    </td>
+                </form>
+            </tr>
+        </tbody>
+    </table>
 
-		</tbody>
-	</table>
+    <table class="table caption-top">
+        <thead class="table-dark">
+            <tr>
+                <th scope="col">Registro</th>
+                <th scope="col">Bodega</th>
+                <th scope="col">Ingrediente</th>
+                <th scope="col">Cantidad</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Registro</td>
+                    <td>@item.Nombre</td>
+                    <td>@item.Ingrediente</td>
+                    <td>@item.Cantidad</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
 
 </body>
 </html>

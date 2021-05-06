@@ -114,31 +114,73 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		public ActionResult bodega_ingrediente()
 		{
 			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("Select * from bodega_ingrediente", Database.conectar);
+			SqlCommand consulta = new SqlCommand("Select BI.cod_bodega_ingrediente as registro, Bi.cod_bodega, B.nombre, BI.cod_ingrediente, I.nombre as ingrediente, BI.cantidad From bodega_ingrediente BI INNER JOIN Bodega B on B.cod_bodega = BI.cod_bodega INNER JOIN ingrediente I on I.cod_ingrediente = BI.cod_ingrediente ", Database.conectar);
 			SqlDataReader Leer = consulta.ExecuteReader();
-			List<Tablas.Bodega_ingrediente> aux = new List<Tablas.Bodega_ingrediente>();
+			List<Admin_aux.Bodega_Ingredientes> aux = new List<Admin_aux.Bodega_Ingredientes>();
 			while (Leer.Read())
 			{
-				aux.Add(new Tablas.Bodega_ingrediente((int)Leer[0], (int)Leer[1], (int)Leer[2], (int)Leer[3]));
+				aux.Add(new Admin_aux.Bodega_Ingredientes((int)Leer[0], (int)Leer[1], (string)Leer[2], (int)Leer[3], (string)Leer[4], (int)Leer[5]));
 			}
 			return View(aux);
 		}
 
 		[HttpPost]
-		public ActionResult bodega_ingrediente(string Codigo_Bodega, int Codigo_Ingrediente, int Cantidad)
+		public ActionResult bodega_ingrediente(string Codigo_Bodega, string Codigo_Ingrediente, int Cantidad)
 		{
+			int _Cod_bodega = 0;
+			int _Cod_ingrediente = 0;
 			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("insert into bodega_ingrediente(cod_bodega,cod_ingrediente,cantidad) values ('" + Codigo_Bodega + "', '" + Codigo_Ingrediente + "', '" + Cantidad + "')", Database.conectar);
-			consulta.ExecuteNonQuery();
-			Database.Reiniciar();
-			consulta = new SqlCommand("Select * from bodega_ingrediente", Database.conectar);
+			SqlCommand consulta = new SqlCommand("Select * from bodega where nombre = '" + Codigo_Bodega + "'", Database.conectar);
 			SqlDataReader Leer = consulta.ExecuteReader();
-			List<Tablas.Bodega_ingrediente> aux = new List<Tablas.Bodega_ingrediente>();
 			while (Leer.Read())
 			{
-				aux.Add(new Tablas.Bodega_ingrediente((int)Leer[0], (int)Leer[1], (int)Leer[2], (int)Leer[3]));
+				_Cod_bodega = (int)Leer[0];
+			}
+			Database.Reiniciar();
+			consulta = new SqlCommand("Select * from ingrediente where nombre = '" + Codigo_Ingrediente + "'", Database.conectar);
+			Leer = consulta.ExecuteReader();
+			while (Leer.Read())
+			{
+				_Cod_ingrediente = (int)Leer[0];
+			}
+			Database.Reiniciar();
+			consulta = new SqlCommand("insert into bodega_ingrediente(cod_bodega,cod_ingrediente,cantidad) values ('" + _Cod_bodega + "', '" + _Cod_ingrediente + "', '" + Cantidad + "')", Database.conectar);
+			consulta.ExecuteNonQuery();
+			Database.Reiniciar();
+			consulta = new SqlCommand("Select BI.cod_bodega_ingrediente as registro, Bi.cod_bodega, B.nombre, BI.cod_ingrediente, I.nombre as ingrediente, BI.cantidad From bodega_ingrediente BI INNER JOIN Bodega B on B.cod_bodega = BI.cod_bodega INNER JOIN ingrediente I on I.cod_ingrediente = BI.cod_ingrediente ", Database.conectar);
+			Leer = consulta.ExecuteReader();
+			List<Admin_aux.Bodega_Ingredientes> aux = new List<Admin_aux.Bodega_Ingredientes>();
+			while (Leer.Read())
+			{
+				aux.Add(new Admin_aux.Bodega_Ingredientes((int)Leer[0], (int)Leer[1], (string)Leer[2], (int)Leer[3], (string)Leer[4], (int)Leer[5]));
 			}
 			return View(aux);
+		}
+		[HttpPost]
+		public JsonResult Obtener_bodega(string nombre)
+		{
+			Database.Reiniciar();
+			SqlCommand consulta = new SqlCommand("Select * from bodega", Database.conectar);
+			SqlDataReader Leer = consulta.ExecuteReader();
+			List<string> aux = new List<string>();
+			while (Leer.Read())
+			{
+				aux.Add((String)Leer[2]);
+			}
+			return Json(aux);
+		}
+		[HttpPost]
+		public JsonResult Obtener_bodega_ingrediente(string cod_bodega ,string nombre)
+		{
+			Database.Reiniciar();
+			SqlCommand consulta = new SqlCommand("Select * from ingrediente where cod_ingrediente NOT IN(Select BI.cod_ingrediente From bodega_ingrediente BI INNER JOIN ingrediente I on I.cod_ingrediente = Bi.cod_ingrediente INNER JOIN bodega B on B.cod_bodega = BI.cod_bodega Where B.nombre = '"+cod_bodega+"')", Database.conectar);
+			SqlDataReader Leer = consulta.ExecuteReader();
+			List<string> aux = new List<string>();
+			while (Leer.Read())
+			{
+				aux.Add((String)Leer[1]);
+			}
+			return Json(aux);
 		}
 
 		public ActionResult detalle_pedido()

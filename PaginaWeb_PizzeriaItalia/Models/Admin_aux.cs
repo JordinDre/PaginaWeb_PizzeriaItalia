@@ -22,5 +22,24 @@ namespace PaginaWeb_PizzeriaItalia.Models
                 Tienda = _Tienda;
             }
         }
+        public class Bodega_Ingredientes
+        {
+            public int Registro { get; set; }
+            public int Cod_bodega { get; set; }
+            public String Nombre { get; set; }
+            public int Cod_ingrediente { get; set; }
+            public String Ingrediente { get; set; }
+            public int Cantidad { get; set; }
+            public Bodega_Ingredientes() { }
+            public Bodega_Ingredientes(int _Registro, int _Cod_bodega, String _Nombre, int _Cod_ingrediente, String _Ingrediente, int _Cantidad)
+            {
+                Registro = _Registro;
+                Cod_bodega = _Cod_bodega;
+                Nombre = _Nombre;
+                Cod_ingrediente = _Cod_ingrediente;
+                Ingrediente = _Ingrediente;
+                Cantidad = _Cantidad;
+            }
+        }
     }
 }
