@@ -1,4 +1,4 @@
-﻿@model List<Tablas.Bodega>
+﻿@model List<Admin_aux.Bodega>
 @{
 	ViewData["Title"] = "Bodega";
 }
@@ -20,8 +20,8 @@
 	<table class="table caption-top">
 		<thead class="table-dark">
 			<tr>
-				<th scope="col">Codigo de Tienda</th>
-				<th scope="col">Nombre</th>
+				<th scope="col">Tienda</th>
+				<th scope="col">Nombre de Bodega</th>
 				<th scope="col">Opciones</th>
 			</tr>
 		</thead>
@@ -29,7 +29,41 @@
 			<tr>
 				<form method="post" action="/Administrador/bodega">
 					<td>
-						<input name="Codigo_Tienda" type="number" required />
+						<input name="Codigo_Tienda" id="Codigo_Tienda" value="1" hidden />
+						
+						<select class="mdb-select md-form" id="Box_tienda">
+                            
+                        </select>
+                        <script>
+							$('#Box_tienda').ready(function () {
+								var url = "@Url.Action("Obtener_tienda","Administrador")";
+                                var x = "";
+                                var data = { nombre: x};
+								$.post(url, data).done(function (data)
+								{
+									$("#Box_tienda").empty();
+                                    console.log(data);
+									$.each(data, function (i, item)
+									{
+										console.log(i);
+										if (i == 0)
+										{
+                                            $("#Codigo_Tienda").val(item);
+                                            $("#Box_tienda").append("<option selected value='" + i + "'>" + item + "</option>")
+										} else
+										{
+                                            $("#Box_tienda").append("<option value='" + i + "'>" + item + "</option>")
+                                        }
+                                    });
+                                });
+                            });
+                            $('#Box_tienda').on('change', function (e) {
+                                var optionSelected = $(this).find("option:selected");
+                                var valueSelected = optionSelected.val();
+                                var textSelected = optionSelected.text();
+								$("#Codigo_Tienda").val(textSelected);
+                            });
+                        </script>
 					</td>
 					<td>
 						<input name="Nombre" type="text" required />
@@ -44,19 +78,19 @@
 
 	<table class="table caption-top">
 		<thead class="table-dark">
-			<tr>
-				<th scope="col">Codigo de Bodega</th>
-				<th scope="col">Codigo de Tienda</th>
-				<th scope="col">Nombre</th>
-			</tr>
+            <tr>
+                <th scope="col">Codigo de Bodega</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Tienda</th>
+            </tr>
 		</thead>
 		<tbody>
 			@foreach (var item in Model)
 			{
 				<tr>
 					<td>@item.Cod_bodega</td>
-					<td>@item.Cod_tienda</td>
-					<td>@item.Nombre</td>
+                    <td>@item.Nombre</td>
+                    <td>@item.Tienda</td>
 				</tr>
 			}
 

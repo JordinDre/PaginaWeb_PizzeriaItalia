@@ -63,31 +63,52 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		public ActionResult bodega()
 		{
 			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("Select * from bodega", Database.conectar);
+			SqlCommand consulta = new SqlCommand("Select Bo.cod_bodega, Bo.nombre,TI.cod_tienda,Ti.nombre from bodega BO INNER JOIN Tienda TI on TI.cod_tienda = Bo.cod_tienda", Database.conectar);
 			SqlDataReader Leer = consulta.ExecuteReader();
-			List<Tablas.Bodega> aux = new List<Tablas.Bodega>();
+			List<Admin_aux.Bodega> aux = new List<Admin_aux.Bodega>();
 			while (Leer.Read())
 			{
-				aux.Add(new Tablas.Bodega((int)Leer[0], (int)Leer[1], (String)Leer[2]));
+				aux.Add(new Admin_aux.Bodega((int)Leer[0], (string)Leer[1], (int)Leer[2], (string)Leer[3]));
 			}
 			return View(aux);
 		}
 
 		[HttpPost]
-		public ActionResult bodega(int Codigo_Tienda, String Nombre)
+		public ActionResult bodega(string Codigo_Tienda, string Nombre)
 		{
+			int _Cod_tienda = 0;
 			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("insert into bodega(cod_tienda,nombre) values ('" + Codigo_Tienda + "', '" + Nombre + "')", Database.conectar);
+			SqlCommand consulta = new SqlCommand("Select * from tienda where nombre = '"+Codigo_Tienda+"'", Database.conectar);
+			SqlDataReader Leer = consulta.ExecuteReader();
+            while (Leer.Read())
+            {
+				_Cod_tienda = (int)Leer[0];
+            }
+			Database.Reiniciar();
+			consulta = new SqlCommand("insert into bodega(cod_tienda,nombre) values ('" + _Cod_tienda + "', '" + Nombre + "')", Database.conectar);
 			consulta.ExecuteNonQuery();
 			Database.Reiniciar();
-			consulta = new SqlCommand("Select * from bodega", Database.conectar);
-			SqlDataReader Leer = consulta.ExecuteReader();
-			List<Tablas.Bodega> aux = new List<Tablas.Bodega>();
+			consulta = new SqlCommand("Select Bo.cod_bodega, Bo.nombre,TI.cod_tienda,Ti.nombre from bodega BO INNER JOIN Tienda TI on TI.cod_tienda = Bo.cod_tienda", Database.conectar);
+			Leer = consulta.ExecuteReader();
+			List<Admin_aux.Bodega> aux = new List<Admin_aux.Bodega>();
 			while (Leer.Read())
 			{
-				aux.Add(new Tablas.Bodega((int)Leer[0], (int)Leer[1], (String)Leer[2]));
+				aux.Add(new Admin_aux.Bodega((int)Leer[0], (string)Leer[1], (int)Leer[2], (string)Leer[3]));
 			}
 			return View(aux);
+		}
+		[HttpPost]
+		public JsonResult Obtener_tienda(string nombre)
+		{
+			Database.Reiniciar();
+			SqlCommand consulta = new SqlCommand("Select * from tienda", Database.conectar);
+			SqlDataReader Leer = consulta.ExecuteReader();
+			List<string> aux = new List<string>();
+			while (Leer.Read())
+			{
+				aux.Add((String)Leer[1]);
+			}
+			return Json(aux);
 		}
 
 		public ActionResult bodega_ingrediente()
@@ -104,7 +125,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		}
 
 		[HttpPost]
-		public ActionResult bodega_ingrediente(int Codigo_Bodega, int Codigo_Ingrediente, int Cantidad)
+		public ActionResult bodega_ingrediente(string Codigo_Bodega, int Codigo_Ingrediente, int Cantidad)
 		{
 			Database.Reiniciar();
 			SqlCommand consulta = new SqlCommand("insert into bodega_ingrediente(cod_bodega,cod_ingrediente,cantidad) values ('" + Codigo_Bodega + "', '" + Codigo_Ingrediente + "', '" + Cantidad + "')", Database.conectar);
