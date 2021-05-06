@@ -31,18 +31,27 @@
 		<tbody>
 			<tr>
 				<form method="post" action="/Administrador/cliente">
-					<td>
-						<select class="mdb-select md-form">
-							<option value="" disabled selected>Tipo de Cliente</option>
-							<option value="1">Cliente</option>
-							<option value="2">Administrador</option>
-						</select>
-					</td>
+					<input name="tipo" id="tipo" value="0" hidden />
+                    <td>
+                        <select class="mdb-select md-form" id="Box_tipo">
+                            <option value="0"selected>Administrador</option>
+                            <option value="1">Cliente</option>
+                        </select>
+                        <script>
+                            $('#Box_tipo').on('change', function (e) {
+                                var optionSelected = $(this).find("option:selected");
+                                var valueSelected = optionSelected.val();
+                                var textSelected = optionSelected.text();
+								$("#tipo").val(valueSelected);
+                                console.log($("#tipo").val());
+                            });
+                        </script>
+                    </td>
 					<td>
 						<input name="Nombre" type="text" required />
 					</td>
 					<td>
-						<input name="Telefono" type="tel" required />
+						<input name="Telefono" type="number" required />
 					</td>
 					<td>
 						<input name="Correo" type="email" required />

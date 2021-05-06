@@ -43,11 +43,12 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 		}
 
 		[HttpPost] 
-		public ActionResult cliente(String Nombre, String Telefono, String Correo, String Contra)
+		public ActionResult cliente(int tipo,String Nombre, String Telefono, String Correo, String Contra)
 		{
 			Database.Reiniciar();
-			SqlCommand consulta = new SqlCommand("insert into cliente(tipo,nombre,telefono,correo,contra) values ('0', '"+Nombre+ "', '" + Telefono + "', '" + Correo + "', '" + Contra + "')", Database.conectar);
+			SqlCommand consulta = new SqlCommand("insert into cliente(tipo,nombre,telefono,correo,contra) values ('"+tipo+"', '"+Nombre+ "', '" + Telefono + "', '" + Correo + "', '" + Contra + "')", Database.conectar);
 			consulta.ExecuteNonQuery();
+
 			Database.Reiniciar();
 			consulta = new SqlCommand("Select * from cliente", Database.conectar);
 			SqlDataReader Leer = consulta.ExecuteReader();
