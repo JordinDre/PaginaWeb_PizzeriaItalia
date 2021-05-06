@@ -201,7 +201,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
                 {
 					TempData.Keep();
 					Database.Reiniciar();
-					SqlCommand consulta = new SqlCommand("Select Pe.cod_pedido as orden, (Case When Pe.tipo_pedido = 1 THEN 'Online' When Pe.tipo_pedido >= 2 THEN 'Tienda' END) as tipo_pedido, TI.nombre as tienda, Pe.direccion, Pe.fecha, Pe.hora, (Select SUM(detalle_pedido.cantidad*pizza.precio) From detalle_pedido INNER JOIN pizza on pizza.cod_pizza = detalle_pedido.cod_pizza where cod_pedido = PE.cod_pedido)as total, (Case When Pe.estado = 1 THEN 'Preparación' When Pe.estado = 2 THEN 'Entregado' END) as Estado From pedido PE INNER JOIN tienda TI on TI.cod_tienda = PE.cod_tienda WHERE Pe.cod_cliente = '" + TempData["Cod_usuario"] + "' ORDER BY PE.fecha DESC", Database.conectar);
+					SqlCommand consulta = new SqlCommand("Select Pe.cod_pedido as orden, (Case When Pe.tipo_pedido = 1 THEN 'Online' When Pe.tipo_pedido >= 2 THEN 'Tienda' END) as tipo_pedido, TI.nombre as tienda, Pe.direccion, Pe.fecha, Pe.hora, (Select SUM(detalle_pedido.cantidad*pizza.precio) From detalle_pedido INNER JOIN pizza on pizza.cod_pizza = detalle_pedido.cod_pizza where cod_pedido = PE.cod_pedido)as total, (Case When Pe.estado = 1 THEN 'Preparación' When Pe.estado = 2 THEN 'Enviado' When Pe.estado = 3 THEN 'Entregado' END) as Estado From pedido PE INNER JOIN tienda TI on TI.cod_tienda = PE.cod_tienda WHERE Pe.cod_cliente = '" + TempData["Cod_usuario"] + "' ORDER BY PE.fecha DESC", Database.conectar);
 					TempData.Keep();
 					SqlDataReader Leer = consulta.ExecuteReader();
 					List<Detalles_auxiliar.Detalle_pedido> aux = new List<Detalles_auxiliar.Detalle_pedido>();

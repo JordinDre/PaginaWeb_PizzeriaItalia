@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Pedidos";
     TempData.Keep();
+    int i = 0;
 }
 <!doctype html>
 <html lang="en">
@@ -13,7 +14,8 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
-
+    <!-- JQUERY -->
+    <script src="https://code.jquery.com/jquery-1.10.0.min.js" integrity="sha256-2+LznWeWgL7AJ1ciaIG5rFP7GKemzzl+K75tRyTByOE=" crossorigin="anonymous"></script>
     <title>Pedidos</title>
 </head>
 <body>
@@ -30,22 +32,67 @@
                 <th scope="col">Hora</th>
                 <th scope="col">Total</th>
                 <th scope="col">Estado</th>
+                <th scope="col">Datos</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
+                i += 1;
+
             <tr>
-                <td>@item.Orden</td>
-                <td>@item.Tipo_pedido</td>
-                <td>@item.Tienda</td>
-                <td>@item.Cliente</td>
-                <td>@item.Direccion</td>
-                <td>@item.Fecha.ToString("dd-MM-yyyy")</td>
-                <td>@item.Hora.ToString("hh\\:mm")</td>
-                <td>@item.Total</td>
-                <td>@item.Estado</td>
-            </tr>
+                <form action="/Administrador/detalle_pedido" method="post">
+                    <input name="cod_pedido" value="@item.Orden" hidden />
+                    <td>@item.Orden</td>
+                    <td>@item.Tipo_pedido</td>
+                    <td>@item.Tienda</td>
+                    <td>@item.Cliente</td>
+                    <td>@item.Direccion</td>
+                    <td>@item.Fecha.ToString("dd-MM-yyyy")</td>
+                    <td>@item.Hora.ToString("hh\\:mm")</td>
+                    <td>@item.Total</td>
+                    <td>
+                        <select class="browser-default custom-select" id="Box_estado+@i">
+                            @switch (item.Estado)
+                            {
+                                case "Preparación":
+                                    <option value="1" selected="">Preparacion</option>
+                                    <option value="2">Enviado</option>
+                                    <option value="3">Entregado</option>
+                                    break;
+                                case "Enviado":
+                                    <option value="1">Preparacion</option>
+                                    <option value="2" selected="">Enviado</option>
+                                    <option value="3">Entregado</option>
+                                    break;
+                                case "Entregado":
+                                    <option value="1">Preparacion</option>
+                                    <option value="2">Enviado</option>
+                                    <option value="3" selected="">Entregado</option>
+                                    break;
+                            }
+                        </select>
+                        <script>
+                            $('#Box_estado+@i').on('change', function (e) {
+                                var optionSelected = $(this);
+                                var valueSelected = optionSelected.val();
+                                var textSelected = $(e.target).find("option:selected").text(); 
+                                console.log(textSelected);
+                                console.log(valueSelected);
+                            });
+                        </script>
+                    </td>
+                    @if (item.Total == 0)
+                    {
+                        <td><button type='submit' style='max-width: 100%; width: 100%; height: 100%' class="btn btn-info" disabled>Detalles</button></td>
+                    }
+                    else
+                    {
+                        <td><button type='submit' style='max-width: 100%; width: 100%; height: 100%' class="btn btn-info">Detalles</button></td>
+                    }
+                </form>
+    
+                </tr>
             }
         </tbody>
     </table>
