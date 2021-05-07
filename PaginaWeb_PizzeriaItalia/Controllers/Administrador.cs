@@ -223,6 +223,14 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			return RedirectToAction("bodega_ingrediente", "Administrador");
 		}
 		[HttpPost]
+		public ActionResult Eliminar_bodega_ingrediente(string Cod_bodega, string Cod_ingrediente)
+		{
+			//Eliminar
+			string _consulta = "DELETE FROM bodega_ingrediente WHERE cod_bodega = '"+Cod_bodega+"' and cod_ingrediente = '"+Cod_ingrediente+"'";
+			Database.Consulta_Non(_consulta);
+			return RedirectToAction("bodega_ingrediente", "Administrador");
+		}
+		[HttpPost]
 		public JsonResult Obtener_bodega(string nombre)
 		{
 			string _consulta = "Select * from bodega";
@@ -327,6 +335,23 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			}
 			return View(aux);
 		}
+		[HttpPost]
+		public ActionResult Eliminar_ingrediente(string Cod_ingrediente)
+		{
+			//Eliminar
+			string _consulta = "";
+			 //Pizzas
+			_consulta = "DELETE FROM pizza_ingrediente WHERE cod_ingrediente = '" + Cod_ingrediente + "'";
+			Database.Consulta_Non(_consulta);
+			//Bodega
+			_consulta = "DELETE FROM bodega_ingrediente WHERE cod_ingrediente = '" + Cod_ingrediente + "'";
+			Database.Consulta_Non(_consulta);
+			//Ingrediente
+			_consulta = "DELETE FROM ingrediente WHERE cod_ingrediente = '" + Cod_ingrediente + "'";
+			Database.Consulta_Non(_consulta);
+
+			return RedirectToAction("ingrediente", "Administrador");
+		}
 
 		public ActionResult pedido()
 		{
@@ -429,7 +454,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			{
 				return RedirectToAction("InicioSesion", "Home");
 			}
-			string _consulta = "Select BI.cod_pizza_ingrediente as registro, Bi.cod_pizza, B.nombre, BI.cod_ingrediente, I.nombre as ingrediente, BI.cantidad From pizza_ingrediente BI INNER JOIN pizza B on B.cod_pizza = BI.cod_pizza INNER JOIN ingrediente I on I.cod_ingrediente = BI.cod_ingrediente";
+			string _consulta = "Select BI.cod_pizza_ingrediente as registro, Bi.cod_pizza, B.nombre, BI.cod_ingrediente, I.nombre as ingrediente, BI.cantidad From pizza_ingrediente BI INNER JOIN pizza B on B.cod_pizza = BI.cod_pizza INNER JOIN ingrediente I on I.cod_ingrediente = BI.cod_ingrediente ORDER BY B.nombre ASC";
 			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			List<Admin_aux.Pizza_Ingredientes> aux = new List<Admin_aux.Pizza_Ingredientes>();
 			while (Leer.Read())
@@ -445,7 +470,7 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 			string _consulta = "insert into bodega_ingrediente(cod_bodega,cod_ingrediente,cantidad) values ('" + Codigo_Pizza + "', '" + Codigo_Ingrediente + "', '" + Cantidad + "')";
 			Database.Consulta_Non(_consulta);
 
-			_consulta = "Select BI.cod_pizza_ingrediente as registro, Bi.cod_pizza, B.nombre, BI.cod_ingrediente, I.nombre as ingrediente, BI.cantidad From pizza_ingrediente BI INNER JOIN pizza B on B.cod_pizza = BI.cod_pizza INNER JOIN ingrediente I on I.cod_ingrediente = BI.cod_ingrediente";
+			_consulta = "Select BI.cod_pizza_ingrediente as registro, Bi.cod_pizza, B.nombre, BI.cod_ingrediente, I.nombre as ingrediente, BI.cantidad From pizza_ingrediente BI INNER JOIN pizza B on B.cod_pizza = BI.cod_pizza INNER JOIN ingrediente I on I.cod_ingrediente = BI.cod_ingrediente ORDER BY B.nombre ASC";
 			SqlDataReader Leer = Database.Consulta_Reader(_consulta);
 			
 			List<Admin_aux.Pizza_Ingredientes> aux = new List<Admin_aux.Pizza_Ingredientes>();
@@ -454,6 +479,14 @@ namespace PaginaWeb_PizzeriaItalia.Controllers
 				aux.Add(new Admin_aux.Pizza_Ingredientes((int)Leer[0], (int)Leer[1], (string)Leer[2], (int)Leer[3], (string)Leer[4], (int)Leer[5]));
 			}
 			return View(aux);
+		}
+		[HttpPost]
+		public ActionResult Eliminar_pizza_ingrediente(string Cod_pizza, string Cod_ingrediente)
+		{
+			//Eliminar
+			string _consulta = "DELETE FROM pizza_ingrediente WHERE cod_pizza = '"+Cod_pizza+"' and cod_ingrediente = '"+Cod_ingrediente+"'";
+			Database.Consulta_Non(_consulta);
+			return RedirectToAction("pizza_ingrediente", "Administrador");
 		}
 		[HttpPost]
 		public JsonResult Obtener_pizza(string nombre)
